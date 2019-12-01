@@ -8,9 +8,12 @@ mod enums;
 mod traits;
 mod utils;
 mod point;
+mod lambda;
 
 fn main() {
-
+    func(0, 101, |x| x % 2 == 0)
 }
+
+
 
 
