@@ -1,6 +1,4 @@
-use std::io::{Read, stdin, stdout, Write};
-use std::fmt::Debug;
-use std::collections::LinkedList;
+use crate::utils::STR;
 
 mod scripts;
 mod console;
@@ -9,9 +7,10 @@ mod traits;
 mod utils;
 mod point;
 mod lambda;
+mod macros;
 
 fn main() {
-    func(0, 101, |x| x % 2 == 0)
+    println!("{:?}", to_s!("test"));
 }
 
 
