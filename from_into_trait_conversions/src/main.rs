@@ -20,22 +20,34 @@ notes:
 /*
     MAIN
 */
+extern crate core;
+
+use std::fmt;
+use std::fmt::{Formatter};
+
 fn main() {
-    let item = Item { name: "cheese", price: 7.40 };
-    let quantity_item: ItemWithQuantity = item.try_into().unwrap();
+    let item = Item { name: "".to_string(), price: 7.40 };
+    let quantity_item: ItemWithQuantity = match item.try_into() {
+        Ok(item) => { item }
+        Err(e) => panic!("conversion error: {}", e)
+    };
 }
 /*
     STRUCTS
 */
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Clone)]
 pub struct Item {
-    name: &'static str,
+    name: String,
     price: f64,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Clone)]
 pub struct ItemWithQuantity {
-    name: &'static str,
+    name: String,
+    // alternatively, use `&'static str`, HOWEVER, comment from coding den discord:
+    // QUOTE:
+    // if you use &str you're going to have to thread lifetimes through the struct usage because something else has to actually own the string,
+    // having structs own their contents generally makes them easier to deal with
     price: f64,
     quantity: u32,
 }
@@ -44,14 +56,14 @@ pub struct ItemWithQuantity {
         TRY INTO
 */
 impl TryInto<ItemWithQuantity> for Item {
-    type Error = &'static str;
+    type Error = ItemConversionError;
 
     fn try_into(self) -> Result<ItemWithQuantity, Self::Error> {
         if self.name.len() == 0 {
-            return Err("cannot convert item with empty name");
+            return Err(ItemConversionError { item: self });
         }
         Ok(ItemWithQuantity {
-            name: self.name,
+            name: self.name.to_string(),
             price: self.price,
             quantity: 1,
         })
@@ -59,16 +71,38 @@ impl TryInto<ItemWithQuantity> for Item {
 }
 
 impl TryInto<Item> for ItemWithQuantity {
-    type Error = &'static str; // alternatively, use (), and return Err(())
+    type Error = ItemWithQuantityConversionError;
 
     fn try_into(self) -> Result<Item, Self::Error> {
         if self.name.len() == 0 {
-            return Err("cannot convert item with empty name");
+            return Err(ItemWithQuantityConversionError { item: self });
         }
         Ok(Item {
-            name: self.name,
+            name: self.name.to_owned(),
             price: self.price,
         })
+    }
+}
+
+#[derive(Debug)]
+pub struct ItemWithQuantityConversionError {
+    item: ItemWithQuantity,
+}
+
+impl fmt::Display for ItemWithQuantityConversionError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "cannot convert item with empty name")
+    }
+}
+
+#[derive(Debug)]
+pub struct ItemConversionError {
+    item: Item,
+}
+
+impl fmt::Display for ItemConversionError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "cannot convert item with empty name")
     }
 }
 
@@ -94,3 +128,4 @@ impl TryInto<Item> for ItemWithQuantity {
 //         }
 //     }
 // }
+
