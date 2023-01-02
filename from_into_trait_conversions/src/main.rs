@@ -26,9 +26,12 @@ use std::fmt;
 use std::fmt::{Formatter};
 
 fn main() {
-    let item = Item { name: "".to_string(), price: 7.40 };
+    let item = Item { name: "james".to_string(), price: 7.40 };
     let quantity_item: ItemWithQuantity = match item.try_into() {
-        Ok(item) => { item }
+        Ok(item) => {
+            println!("{:?}", item);
+            item
+        }
         Err(e) => panic!("conversion error: {}", e)
     };
 }
