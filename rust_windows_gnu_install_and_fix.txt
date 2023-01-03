@@ -1,0 +1,22 @@
+
+# needed for CLion debugger with rust GNU toolchain (MINGW)
+# point CLion to the mingw64 folder, select 'mingw gdb' for the debugger
+
+https://github.com/niXman/mingw-builds-binaries/releases/tag/12.1.0-rt_v10-rev3
+
+
+# install the rust GNU windows toolchain for rust (MINGW)
+# NOTE: complete profile failed on windows for stable channel
+
+rustup toolchain install stable-x86_64-pc-windows-gnu --profile default
+
+
+
+# make the windows GNU (MINGW) toolchain the default toolchain for rustup
+
+rustup default stable-x86_64-pc-windows-gnu
+
+
+# issue on CLion bug tracker:
+https://youtrack.jetbrains.com/issue/CPP-28311/Bundled-GDB-throws-Undefined-item-UTF-8-when-debugging-Rust-tutorial-project-on-Windows
+
