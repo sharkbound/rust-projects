@@ -1,0 +1,8 @@
+# macro ident combiner: 
+```
+paste!(
+	[<t e s t>] // becomes test
+)
+```
+URL: https://crates.io/crates/paste
+paste = "1.0"
