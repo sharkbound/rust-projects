@@ -5,7 +5,7 @@
 
 fn main() {}
 
-fn inline_if_pattern_matching() {
+fn if_inline_if_pattern_matching() {
     // inline w/ if statement
     let value = Some(9);
     if let Some(val2) = value {
@@ -15,13 +15,13 @@ fn inline_if_pattern_matching() {
     }
 }
 
-fn inline_variable_pattern_matching() {
+fn if_inline_variable_pattern_matching() {
     // inline w/ variable
     let value = Some(9);
     let x = if let Some(val1) = value { val1 + 1 } else { -1 };
 }
 
-fn number_range_pattern_matching() {
+fn match_number_range_pattern_matching() {
     let num = 9;
     match num {
         0..=3 => { /*0-3*/ }
@@ -31,7 +31,7 @@ fn number_range_pattern_matching() {
     }
 }
 
-fn destructure_struct_enum_pattern_matching() {
+fn match_destructure_struct_enum_pattern_matching() {
     enum ShapeWithNamed {
         Circle { radius: i32 },
         Rect { width: i32, height: i32 },
@@ -48,7 +48,7 @@ fn destructure_struct_enum_pattern_matching() {
     }
 }
 
-fn destruct_tuple_enum_pattern_matching() {
+fn match_destruct_tuple_enum_pattern_matching() {
     enum ShapeWithTuple {
         Circle(i32),
         Rect(i32, i32),
@@ -70,6 +70,21 @@ fn function_args_destructuring((x, y): (i32, i32)) {
     // can use `x` and `y`
 }
 
+fn match_inline_arm_checks_declaration() {
+    let n = 100;
+    match n {
+        // using arm guards
+        x if (1..10).contains(&x) => {}
+
+        // declares variable `x` and checks the condition after the @
+        // can apply to struct field too
+        // struct syntax is: <Struct> { age: val @ 1..=10 }, where `val` is the temp variable
+        x @ 1..=10 => {}
+
+        // default case
+        _ => {}
+    }
+}
 
 struct Item {
     id: i32,
