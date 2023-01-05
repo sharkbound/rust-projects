@@ -1,3 +1,7 @@
+[
+	NOTE: use `cargo add` and `cargo remove` to manage crates for a crate TOML
+]
+
 # macro ident combiner: 
 ```
 paste!(
@@ -5,4 +9,22 @@ paste!(
 )
 ```
 URL: https://crates.io/crates/paste
-paste = "1.0"
+NAME: paste
+
+
+# regex matcher
+URL: https://crates.io/crates/regex
+NAME: regex
+
+# logging
+URL: https://crates.io/crates/log
+NAME: log
+
+# env logging
+URL: https://crates.io/crates/env_logger
+NAME: env_logger
+
+# improved error handling - error-stack
+URL: https://crates.io/crates/error-stack
+NAME: error-stack
+YT: https://www.youtube.com/watch?v=g6WUHcyjsfc
