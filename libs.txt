@@ -2,7 +2,7 @@
 	NOTE: use `cargo add` and `cargo remove` to manage crates for a crate TOML
 ]
 
-# macro ident combiner: 
+#### macro ident combiner ####
 ```
 paste!(
 	[<t e s t>] // becomes test
@@ -11,20 +11,24 @@ paste!(
 URL: https://crates.io/crates/paste
 NAME: paste
 
-
-# regex matcher
+#### regex matcher ####
 URL: https://crates.io/crates/regex
 NAME: regex
 
-# logging
+#### logging ####
 URL: https://crates.io/crates/log
 NAME: log
 
-# env logging
+#### env logging ####
 URL: https://crates.io/crates/env_logger
 NAME: env_logger
 
-# improved error handling - error-stack
+#### improved error handling - error-stack ####
 URL: https://crates.io/crates/error-stack
 NAME: error-stack
 YT: https://www.youtube.com/watch?v=g6WUHcyjsfc
+
+#### faster hashset / hashmap ###
+NAME: rustc-hash
+URL: https://crates.io/crates/rustc-hash
+YT: https://youtu.be/VMpSYJ_7aYM?t=303
