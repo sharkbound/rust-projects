@@ -1,0 +1,11 @@
+# INSTALL / UPDATES SurrealDB | POWERSHELL
+iwr https://windows.surrealdb.com -useb | iex
+
+# START IN-MEMORY DB
+surreal start --log debug --user root --pass root memory
+
+# CLI DOCS
+https://surrealdb.com/docs/cli
+
+# START USING FILE
+surreal start --log debug --user root --pass root file://D:/data/database/surrealdb
