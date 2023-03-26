@@ -32,3 +32,15 @@ YT: https://www.youtube.com/watch?v=g6WUHcyjsfc
 NAME: rustc-hash
 URL: https://crates.io/crates/rustc-hash
 YT: https://youtu.be/VMpSYJ_7aYM?t=303
+
+#### -ASYNC-MAIN- async-std async version of stdlib
+NAME: async-std
+URL: https://crates.io/crates/async-std
+
+#### -ASYNC-MAIN- An event-driven, non-blocking I/O platform for writing asynchronous I/O backed applications. 
+NAME: tokio
+URL: https://crates.io/crates/tokio
+
+#### Tools for concurrent programming
+NAME: crossbeam
+URL: https://crates.io/crates/crossbeam
