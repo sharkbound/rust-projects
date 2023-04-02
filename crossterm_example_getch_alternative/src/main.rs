@@ -1,3 +1,4 @@
+use bitflags::bitflags;
 use crossterm::{cursor, execute};
 use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers, read};
 use crossterm::style::Print;
