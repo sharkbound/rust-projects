@@ -44,7 +44,6 @@ impl Default for AttributeStats {
     }
 }
 
-impl<'de> FromToJson<'de> for AttributeStats {}
 
 #[cfg(test)]
 mod character_stat_tests {

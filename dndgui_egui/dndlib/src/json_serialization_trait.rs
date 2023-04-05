@@ -10,3 +10,6 @@ pub trait FromToJson<'de>: Serialize + Deserialize<'de> {
         serde_json::to_string(self)
     }
 }
+
+impl<'de, T> FromToJson<'de> for T
+    where T: Deserialize<'de> + Serialize {}

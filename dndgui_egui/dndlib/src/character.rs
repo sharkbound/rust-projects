@@ -34,5 +34,3 @@ impl Character {
         serde_json::from_str(json).unwrap()
     }
 }
-
-impl<'de> FromToJson<'de> for Character {}
