@@ -1,5 +1,4 @@
 use dndlib::{AttributeStats, Character, DndCampaign};
-use dndlib::json_serialization_trait::FromToJson;
 use mainapp;
 
 // surrealdb: https://www.youtube.com/watch?v=iOyvum0D3LM&list=PLvuQflRR4UzYhl-CDmmuqzLwuywWi7vo2
@@ -7,6 +6,8 @@ use mainapp;
 fn main() {
     println!("Starting Dungeons and Dragons GUI...");
     let char = Character::new("james", AttributeStats::new(10, 18, 8, 5, 4, 7));
-    println!("{:?}", DndCampaign::default());
+    let mut campaign = DndCampaign::default();
+    campaign.add_character(char);
+    println!("{:#?}", campaign);
     mainapp::MainApp::run().unwrap();
 }

@@ -1,36 +1,31 @@
-use crate::AttributeStats;
-use crate::json_serialization_trait::FromToJson;
+use crate::{AttributeStats, DndCampaign, Note};
 
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Character {
     name: String,
     stats: AttributeStats,
+    note: Note,
+    character_id: Uuid,
 }
 
 impl Character {
     pub fn new(name: &str, stats: AttributeStats) -> Self {
-        Character { name: name.to_owned(), stats }
+        Character { name: name.to_owned(), stats, note: Default::default(), character_id: Uuid::new_v4() }
     }
 
     pub fn with_default_stats(name: &str) -> Self {
-        Character { name: name.to_owned(), stats: AttributeStats::default() }
+        Character { name: name.to_owned(), stats: Default::default(), note: Default::default(), character_id: Uuid::new_v4() }
     }
 
-    pub fn name(&self) -> &str {
-        &self.name
+    pub fn edit_note(&mut self, mut edit: impl FnMut(&mut Note)) -> &mut Self {
+        edit(&mut self.note);
+        self
     }
 
-    pub fn stats(&self) -> &AttributeStats {
-        &self.stats
-    }
-
-    pub fn as_json_string(&self) -> String {
-        serde_json::to_string(&self).unwrap()
-    }
-
-    pub fn from_json_string(json: &str) -> Character {
-        serde_json::from_str(json).unwrap()
-    }
+    pub fn name(&self) -> &str { &self.name }
+    pub fn stats(&self) -> &AttributeStats { &self.stats }
+    pub fn note(&self) -> &Note { &self.note }
 }

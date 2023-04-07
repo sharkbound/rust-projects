@@ -1,5 +1,4 @@
 use serde::{Serialize, Deserialize};
-use crate::json_serialization_trait::FromToJson;
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct AttributeStats {
