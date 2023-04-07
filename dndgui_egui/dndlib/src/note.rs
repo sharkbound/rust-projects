@@ -13,6 +13,10 @@ impl Note {
         Note { title: title.to_owned(), content: content.to_owned(), id: Uuid::new_v4() }
     }
 
+    pub fn with_empty_title(content: &str) -> Self {
+        Self::new("", content)
+    }
+
     pub fn title(&self) -> &str { &self.title }
     pub fn content(&self) -> &str { &self.content }
     pub fn id(&self) -> &Uuid { &self.id }
@@ -34,6 +38,12 @@ impl Note {
 
     pub fn clear_title(&mut self) -> &mut Self {
         self.title = String::new();
+        self
+    }
+
+    pub fn clear(&mut self) -> &mut Self {
+        self.title = String::new();
+        self.content = String::new();
         self
     }
 }
