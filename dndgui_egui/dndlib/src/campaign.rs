@@ -61,7 +61,7 @@ impl<'a> Iterator for CampaignNotesIter<'a> {
                     Some(character) => {
                         self.character_index += 1;
                         Some(NoteIterItem {
-                            note: character.note(),
+                            note: &character.note,
                             character: Some(&character),
                         })
                     }

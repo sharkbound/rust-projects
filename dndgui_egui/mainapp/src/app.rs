@@ -12,9 +12,6 @@ impl App for MainApp {
         });
 
         egui::TopBottomPanel::top("aba").show(ctx, |ui| {
-            ui.button("button 2");
-            let mut s = String::new();
-            let resp = ui.add(egui::TextEdit::singleline(&mut s));
         });
         // egui::CentralPanel::default().show(ctx, |ui| {
         //

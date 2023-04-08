@@ -5,10 +5,10 @@ use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Character {
-    name: String,
-    stats: AttributeStats,
-    note: Note,
-    character_id: Uuid,
+    pub name: String,
+    pub stats: AttributeStats,
+    pub note: Note,
+    pub character_id: Uuid,
 }
 
 impl Character {
@@ -24,8 +24,10 @@ impl Character {
         edit(&mut self.note);
         self
     }
+}
 
-    pub fn name(&self) -> &str { &self.name }
-    pub fn stats(&self) -> &AttributeStats { &self.stats }
-    pub fn note(&self) -> &Note { &self.note }
+impl Default for Character {
+    fn default() -> Self {
+        Character { name: Default::default(), stats: Default::default(), note: Default::default(), character_id: Uuid::new_v4() }
+    }
 }
