@@ -1,3 +1,5 @@
+use std::ffi::OsStr;
+use std::fs;
 use std::fs::File;
 use std::io::{BufReader, Read, Write};
 use std::path::Path;
@@ -5,7 +7,7 @@ use serde_json;
 
 use crate::{DndCampaign};
 
-fn load_campaign(path: &Path) -> Option<DndCampaign> {
+pub fn load_campaign(path: &Path) -> Option<DndCampaign> {
     if !path.exists() {
         return None;
     }
@@ -27,7 +29,7 @@ fn load_campaign(path: &Path) -> Option<DndCampaign> {
     })
 }
 
-fn save_campaign(path: &Path, campaign: &DndCampaign) -> bool {
+pub fn save_campaign(path: &Path, campaign: &DndCampaign) -> bool {
     let mut file = match File::options().write(true).open(&path) {
         Ok(file) => file,
         Err(_) => return false
@@ -39,4 +41,34 @@ fn save_campaign(path: &Path, campaign: &DndCampaign) -> bool {
     };
 
     file.write_all(json.as_bytes()).is_ok()
+}
+
+pub fn load_campaigns(directory: &Path) -> Vec<DndCampaign> {
+    let mut campaigns = vec![];
+    if !directory.is_dir() || !directory.exists() {
+        return campaigns;
+    }
+
+    let entries = match fs::read_dir(directory) {
+        Err(_) => return campaigns,
+        Ok(entries) => entries
+    };
+
+    for path in entries.flatten().map(|x| x.path()) {
+        if !path.is_file() {
+            continue;
+        }
+
+        match path.extension() {
+            Some(ext) if ext.to_string_lossy().eq_ignore_ascii_case("json") => {
+                match load_campaign(&path) {
+                    None => continue,
+                    Some(campaign) => campaigns.push(campaign),
+                }
+            }
+            _ => {}
+        }
+    }
+
+    campaigns
 }
