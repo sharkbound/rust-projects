@@ -3,12 +3,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct DndCampaign {
+    title: String,
     characters: Vec<Character>,
     global_notes: Vec<Note>,
 }
 
 impl DndCampaign {
-    pub fn new(characters: Vec<Character>, notes: Vec<Note>) -> Self { Self { characters, global_notes: notes } }
+    pub fn new(title: &str, characters: Vec<Character>, notes: Vec<Note>) -> Self {
+        Self {
+            characters,
+            title: title.to_owned(),
+            global_notes: notes,
+        }
+    }
 
     pub fn characters(&self) -> &[Character] { &self.characters }
     pub fn notes(&self) -> CampaignNotesIter { CampaignNotesIter { global_note_index: 0, character_index: 0, campaign: self } }
@@ -28,7 +35,7 @@ impl DndCampaign {
 
 impl Default for DndCampaign {
     fn default() -> Self {
-        Self::new(vec![], vec![])
+        Self::new("", vec![], vec![])
     }
 }
 
@@ -78,7 +85,7 @@ mod note_iterator_test {
 
     #[test]
     fn test_note_iterator() {
-        let campaign = DndCampaign::new(vec![
+        let campaign = DndCampaign::new("", vec![
             {
                 let mut c = Character::with_default_stats("james");
                 c.edit_note(|note| {

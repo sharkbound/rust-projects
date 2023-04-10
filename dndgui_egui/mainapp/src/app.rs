@@ -1,17 +1,29 @@
 use std::env;
 use eframe::{App, egui, Frame, run_native};
 use eframe::egui::{Context};
+use eframe::emath::Align2;
+use serde_json::error::Category;
+use dndlib::{CampaignLoadError, DndCampaign, load_campaign};
 
 // https://github.com/emilk/egui/blob/master/examples
 // https://crates.io/crates/eframe
+enum ModalAction {
+    Close,
+    KeepOpen,
+}
+
 pub struct MainApp {
     file_dialog: Option<egui_file::FileDialog>,
+    campaign: Option<DndCampaign>,
+    modal: Option<Box<dyn Fn(&Context) -> ModalAction>>,
 }
 
 impl MainApp {
     pub fn new() -> Self {
         Self {
-            file_dialog: None
+            file_dialog: None,
+            campaign: None,
+            modal: None,
         }
     }
 
@@ -28,22 +40,33 @@ impl MainApp {
         self.file_dialog = Some(file_dialog);
     }
 
-    fn check_file_dialog(&mut self, ctx: &Context) {
-        if let Some(file_dialog) = &mut self.file_dialog {
-            if !file_dialog.show(ctx).selected() {
-                return;
-            }
-
-            if let Some(file) = file_dialog.path() {
-                self.file_dialog = None;
-                todo!("add gui elements & proper handling when a json file is selected");
+    fn validate_load_file_selection(&mut self, ctx: &Context) -> Result<(), CampaignLoadError> {
+        match &mut self.file_dialog {
+            None => Ok(()),
+            Some(file_dialog) => {
+                if !file_dialog.show(ctx).selected() {
+                    return Ok(());
+                }
+                match file_dialog.path() {
+                    None => Ok(()),
+                    Some(file) => {
+                        self.file_dialog = None;
+                        match load_campaign(file.as_path()) {
+                            Ok(campaign) => {
+                                self.campaign = Some(campaign);
+                                Ok(())
+                            }
+                            Err(e) => {
+                                Err(e)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-}
 
-impl App for MainApp {
-    fn update(&mut self, ctx: &Context, frame: &mut Frame) {
+    fn show_top_menu_panel(&mut self, ctx: &Context) {
         egui::TopBottomPanel::top("aba").show(ctx, |ui| {
             ui.menu_button("Load", |ui| {
                 if ui.button("load campaign from file").clicked() {
@@ -52,10 +75,74 @@ impl App for MainApp {
                 }
             })
         });
+    }
 
-        egui::CentralPanel::default().show(ctx, |ui| {
-            self.check_file_dialog(ctx);
-        });
+    fn create_campaign_load_error_modal(e: CampaignLoadError) -> Option<Box<dyn Fn(&Context) -> ModalAction>> {
+        Some(Box::new(move |ctx| {
+            let mut modal_end_state = ModalAction::KeepOpen;
+            egui::Window::new("Campaign Load Error")
+                .resizable(false)
+                .collapsible(false)
+                .anchor(Align2::CENTER_CENTER, egui::Vec2::new(0., 0.))
+                .show(ctx, |ui| {
+                    ui.vertical(|ui| {
+                        ui.label(format!(r#"An error occurred while loading the campaign json file located at: "{:?}""#, e.path()));
+                        ui.separator();
+                        match &e {
+                            CampaignLoadError::FileNotFound(file) => { ui.label("the selected file could not be found"); }
+                            CampaignLoadError::ReadFile(file) => { ui.label("An error occurred when trying to read the file"); }
+                            CampaignLoadError::FileOpen(file) => { ui.label("An error occurred when trying to open the file"); }
+                            CampaignLoadError::Json(file, error) => {
+                                match error.classify() {
+                                    Category::Io => { ui.label(format!("An IO error occurred when trying to read the file")); }
+                                    Category::Syntax => {
+                                        ui.label(format!("A Syntax error occurred at:\n\tLine: {:?}\n\tColumn: {:?}", error.line(), error.column()));
+                                    }
+                                    Category::Data => {
+                                        ui.label(
+                                            format!(
+                                                "A Data error occurred at:\n\tLine: {:?}\n\tColumn: {:?}\n\n\
+                                        It's likely that the json does not conform the campaign save format, lacks some json keys, or was corrupted.",
+                                                error.line(), error.column()));
+                                    }
+                                    Category::Eof => { ui.label(format!("Reached Unexpected End Of File")); }
+                                }
+                            }
+                        }
+                    });
+                    if ui.button("Close").clicked() {
+                        modal_end_state = ModalAction::Close;
+                    }
+                });
+            modal_end_state
+        }))
+    }
+}
+
+impl App for MainApp {
+    fn update(&mut self, ctx: &Context, frame: &mut Frame) {
+        match self.validate_load_file_selection(ctx) {
+            Ok(_) => {}
+            Err(e) => {
+                self.modal = Self::create_campaign_load_error_modal(e);
+            }
+        }
+
+        match &self.modal {
+            None => {}
+            Some(handler) => {
+                match handler(ctx) {
+                    ModalAction::KeepOpen => return,
+                    ModalAction::Close => {
+                        self.modal = None;
+                        return;
+                    }
+                }
+            }
+        }
+
+        self.show_top_menu_panel(ctx);
+        egui::CentralPanel::default().show(ctx, |ui| {});
     }
 }
 

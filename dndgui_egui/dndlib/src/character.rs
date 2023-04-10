@@ -1,4 +1,4 @@
-use crate::{AttributeStats, DndCampaign, Note};
+use crate::{AttributeStats, DndCampaign, Note, Race};
 
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -9,15 +9,28 @@ pub struct Character {
     pub stats: AttributeStats,
     pub note: Note,
     pub character_id: Uuid,
+    pub race: Race,
 }
 
 impl Character {
-    pub fn new(name: &str, stats: AttributeStats) -> Self {
-        Character { name: name.to_owned(), stats, note: Default::default(), character_id: Uuid::new_v4() }
+    pub fn new(name: &str, race: Race, stats: AttributeStats) -> Self {
+        Character {
+            name: name.to_owned(),
+            stats,
+            note: Default::default(),
+            character_id: Uuid::new_v4(),
+            race,
+        }
     }
 
-    pub fn with_default_stats(name: &str) -> Self {
-        Character { name: name.to_owned(), stats: Default::default(), note: Default::default(), character_id: Uuid::new_v4() }
+    pub fn with_default_stats(name: &str, race: Race) -> Self {
+        Character {
+            name: name.to_owned(),
+            stats: Default::default(),
+            note: Default::default(),
+            character_id: Uuid::new_v4(),
+            race,
+        }
     }
 
     pub fn edit_note(&mut self, mut edit: impl FnMut(&mut Note)) -> &mut Self {
@@ -28,6 +41,6 @@ impl Character {
 
 impl Default for Character {
     fn default() -> Self {
-        Character { name: Default::default(), stats: Default::default(), note: Default::default(), character_id: Uuid::new_v4() }
+        Character { race: Race::NotSet, name: Default::default(), stats: Default::default(), note: Default::default(), character_id: Uuid::new_v4() }
     }
 }

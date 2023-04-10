@@ -1207,6 +1207,7 @@ dependencies = [
  "dndlib",
  "eframe",
  "egui_file",
+ "serde_json",
 ]
 
 [[package]]
