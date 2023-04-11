@@ -4,6 +4,7 @@ use eframe::egui::{Context};
 use eframe::emath::Align2;
 use serde_json::error::Category;
 use dndlib::{CampaignLoadError, DndCampaign, load_campaign};
+use crate::MainTab;
 
 // https://github.com/emilk/egui/blob/master/examples
 // https://crates.io/crates/eframe
@@ -12,20 +13,22 @@ enum ModalAction {
     KeepOpen,
 }
 
+#[derive(Default)]
 pub struct MainApp {
     file_dialog: Option<egui_file::FileDialog>,
     campaign: Option<DndCampaign>,
     modal: Option<Box<dyn Fn(&Context) -> ModalAction>>,
+    maintab: MainTab,
 }
 
 impl MainApp {
-    pub fn new() -> Self {
-        Self {
-            file_dialog: None,
-            campaign: None,
-            modal: None,
-        }
-    }
+    // pub fn new() -> Self {
+    //     Self {
+    //         file_dialog: None,
+    //         campaign: None,
+    //         modal: None,
+    //     }
+    // }
 
     fn set_new_file_dialog(&mut self) {
         let mut file_dialog = egui_file::FileDialog::open_file(Some(env::current_dir().unwrap()))
@@ -67,7 +70,7 @@ impl MainApp {
     }
 
     fn show_top_menu_panel(&mut self, ctx: &Context) {
-        egui::TopBottomPanel::top("aba").show(ctx, |ui| {
+        egui::TopBottomPanel::top("primary_topbar").show(ctx, |ui| {
             ui.menu_button("Load", |ui| {
                 if ui.button("load campaign from file").clicked() {
                     self.set_new_file_dialog();
@@ -99,6 +102,7 @@ impl MainApp {
                                         ui.label(format!("A Syntax error occurred at:\n\tLine: {:?}\n\tColumn: {:?}", error.line(), error.column()));
                                     }
                                     Category::Data => {
+                                        ui.label(format!("--- {:?} ---", error));
                                         ui.label(
                                             format!(
                                                 "A Data error occurred at:\n\tLine: {:?}\n\tColumn: {:?}\n\n\
@@ -142,14 +146,34 @@ impl App for MainApp {
         }
 
         self.show_top_menu_panel(ctx);
-        egui::CentralPanel::default().show(ctx, |ui| {});
+        egui::CentralPanel::default().show(ctx, |ui| {
+            ui.vertical(|ui| {
+                egui::TopBottomPanel::top("tab_topbar").show(ctx, |ui| {
+                    ui.horizontal(|ui| {
+                        ui.selectable_value(&mut self.maintab, MainTab::Overview, "Overview");
+                        ui.selectable_value(&mut self.maintab, MainTab::Characters, "Characters");
+                        ui.selectable_value(&mut self.maintab, MainTab::Notes, "Notes");
+                        ui.selectable_value(&mut self.maintab, MainTab::Settings, "Settings");
+                    });
+                });
+
+                egui::CentralPanel::default().show(ctx, |ui| {
+                    match self.maintab {
+                        MainTab::Overview => { ui.label("Overview"); }
+                        MainTab::Characters => { ui.label("Characters"); }
+                        MainTab::Notes => { ui.label("Notes"); }
+                        MainTab::Settings => { ui.label("Settings"); }
+                    }
+                });
+            });
+        });
     }
 }
 
 impl MainApp {
     pub fn run() -> eframe::Result<()> {
         let options = eframe::NativeOptions::default();
-        run_native(Self::name(), options, Box::new(|_cc| Box::new(MainApp::new())))
+        run_native(Self::name(), options, Box::new(|_cc| Box::new(MainApp::default())))
     }
 
     fn name() -> &'static str {
