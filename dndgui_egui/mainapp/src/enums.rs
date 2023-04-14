@@ -1,3 +1,8 @@
+pub enum ModalAction {
+    Close,
+    KeepOpen,
+}
+
 #[derive(PartialEq)]
 pub enum MainTab {
     Overview,

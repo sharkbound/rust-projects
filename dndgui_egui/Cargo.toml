@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "dndgui",
+    "launcher",
     "mainapp",
     "dndlib",
 ]
