@@ -3,7 +3,8 @@ use eframe::egui::Context;
 use dndlib::{DndCampaign};
 use crate::enums::ModalAction;
 use crate::enums::MainTab;
-use crate::{file_dialog_handler, modals};
+use crate::{file_dialog_handler, modals, topmenu};
+use crate::maintab_handlers::overview_tab_handler::render_maintab_overview;
 
 pub struct MainApp {
     pub(crate) file_dialog: Option<egui_file::FileDialog>,
@@ -23,18 +24,6 @@ impl Default for MainApp {
     }
 }
 
-impl MainApp {
-    fn show_top_menu_panel(&mut self, ctx: &Context) {
-        egui::TopBottomPanel::top("primary_topbar").show(ctx, |ui| {
-            ui.menu_button("Load", |ui| {
-                if ui.button("load campaign from file").clicked() {
-                    file_dialog_handler::set_new_file_dialog(self);
-                    ui.close_menu();
-                }
-            })
-        });
-    }
-}
 
 impl App for MainApp {
     fn update(&mut self, ctx: &Context, frame: &mut Frame) {
@@ -58,7 +47,7 @@ impl App for MainApp {
             }
         }
 
-        self.show_top_menu_panel(ctx);
+        topmenu::show_top_menu(ctx, self);
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.vertical(|ui| {
                 egui::TopBottomPanel::top("tab_topbar").show(ctx, |ui| {
@@ -72,7 +61,7 @@ impl App for MainApp {
 
                 egui::CentralPanel::default().show(ctx, |ui| {
                     match self.current_maintab {
-                        MainTab::Overview => { ui.label("Overview"); }
+                        MainTab::Overview => { render_maintab_overview(ctx, ui, self); }
                         MainTab::Characters => { ui.label("Characters"); }
                         MainTab::Notes => { ui.label("Notes"); }
                         MainTab::Settings => { ui.label("Settings"); }
