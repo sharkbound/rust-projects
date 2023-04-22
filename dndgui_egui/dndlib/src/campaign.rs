@@ -17,6 +17,7 @@ impl DndCampaign {
         }
     }
 
+    pub fn title(&self) -> &str { &self.title }
     pub fn characters(&self) -> &[Character] { &self.characters }
     pub fn notes(&self) -> CampaignNotesIter { CampaignNotesIter { global_note_index: 0, character_index: 0, campaign: self } }
 

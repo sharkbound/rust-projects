@@ -24,21 +24,20 @@ fn create_filler_campaign() -> DndCampaign {
     DndCampaign::new(
         "Example Campaign For Testing",
         vec![
-            {
-                let mut ddan = Character::new("Default Dan", Race::BugBear, AttributeStats::new(
+                Character::new("Default Dan", Race::BugBear, AttributeStats::new(
                     16,
                     10,
                     8,
                     20,
                     15,
                     16,
-                ));
-                ddan.edit_note(|note| {
-                    note.edit_title(|_| "Default Dan's Note!".to_owned());
-                    note.edit_content(|_| "Default Dan's Note Content! Not much to see here, cause, Default Dan is a pretty generic guy!".to_owned());
-                });
-                ddan
-            }],
+                )).edit(|chr| {
+                    chr.edit_note(|note| {
+                        note.edit_title(|_| "Default Dan's Note!".to_owned());
+                        note.edit_content(|_| "Default Dan's Note Content! Not much to see here, cause Default Dan is a pretty generic guy!".to_owned());
+                    });
+                })
+            ],
         vec![
             Note::new("Default Note For Testing!", "\
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \

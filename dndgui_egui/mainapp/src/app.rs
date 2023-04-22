@@ -1,5 +1,6 @@
+use std::borrow::Cow;
 use eframe::{App, egui, Frame, run_native};
-use eframe::egui::Context;
+use eframe::egui::{Context, FontData, FontDefinitions, FontFamily, SelectableLabel};
 use dndlib::{DndCampaign};
 use crate::enums::ModalAction;
 use crate::enums::MainTab;
@@ -11,6 +12,25 @@ pub struct MainApp {
     pub(crate) campaign: Option<DndCampaign>,
     pub(crate) modal: Option<Box<dyn Fn(&Context) -> ModalAction>>,
     pub(crate) current_maintab: MainTab,
+    initfonts: bool,
+}
+
+impl MainApp {
+    pub fn run() -> eframe::Result<()> {
+        let options = eframe::NativeOptions::default();
+        run_native(Self::name(), options, Box::new(|_cc| Box::new(MainApp::default())))
+    }
+
+    fn name() -> &'static str {
+        "Dungeons and Dragons Manager"
+    }
+
+    fn setup_fonts(ctx: &Context) {
+        let mut fontdefs = FontDefinitions::default();
+        fontdefs.font_data.insert("dnd".into(), FontData::from_static(include_bytes!("../../Dalelands.ttf")));
+        fontdefs.families.insert(FontFamily::Name("dnd".into()), vec!["dnd".into()]);
+        ctx.set_fonts(fontdefs);
+    }
 }
 
 impl Default for MainApp {
@@ -20,6 +40,7 @@ impl Default for MainApp {
             campaign: Default::default(),
             modal: Default::default(),
             current_maintab: Default::default(),
+            initfonts: true,
         }
     }
 }
@@ -27,6 +48,11 @@ impl Default for MainApp {
 
 impl App for MainApp {
     fn update(&mut self, ctx: &Context, frame: &mut Frame) {
+        if self.initfonts {
+            Self::setup_fonts(ctx);
+            self.initfonts = false;
+        }
+
         match file_dialog_handler::validate_load_file_selection(self, ctx) {
             Ok(_) => {}
             Err(e) => {
@@ -69,16 +95,5 @@ impl App for MainApp {
                 });
             });
         });
-    }
-}
-
-impl MainApp {
-    pub fn run() -> eframe::Result<()> {
-        let options = eframe::NativeOptions::default();
-        run_native(Self::name(), options, Box::new(|_cc| Box::new(MainApp::default())))
-    }
-
-    fn name() -> &'static str {
-        "Dungeons and Dragons Manager"
     }
 }

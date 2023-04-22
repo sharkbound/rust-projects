@@ -23,6 +23,14 @@ impl Character {
         }
     }
 
+    pub fn edit(mut self, mut edit: impl FnMut(&mut Character)) -> Self {
+        edit(&mut self);
+        self
+    }
+
+    pub fn edit_as_ref_mut(&mut self, mut edit: impl FnMut(&mut Character)) {
+        edit(self);
+    }
     pub fn with_default_stats(name: &str, race: Race) -> Self {
         Character {
             name: name.to_owned(),
