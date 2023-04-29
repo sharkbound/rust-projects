@@ -1,3 +1,4 @@
+use std::slice::Iter;
 use crate::{Character, Note};
 use serde::{Deserialize, Serialize};
 
@@ -18,8 +19,8 @@ impl DndCampaign {
     }
 
     pub fn title(&self) -> &str { &self.title }
-    pub fn characters(&self) -> &[Character] { &self.characters }
-    pub fn notes(&self) -> CampaignNotesIter { CampaignNotesIter { global_note_index: 0, character_index: 0, campaign: self } }
+    pub fn iter_characters(&self) -> Iter<'_, Character> { self.characters.iter() }
+    pub fn iter_notes(&self) -> CampaignNotesIter { CampaignNotesIter { global_note_index: 0, character_index: 0, campaign: self } }
 
     pub fn add_character(&mut self, character: Character) {
         self.characters.push(character);
@@ -82,28 +83,29 @@ impl<'a> Iterator for CampaignNotesIter<'a> {
 
 #[cfg(test)]
 mod note_iterator_test {
+    use crate::Race;
     use super::*;
 
     #[test]
     fn test_note_iterator() {
         let campaign = DndCampaign::new("", vec![
             {
-                let mut c = Character::with_default_stats("james");
+                let mut c = Character::with_default_stats("james", Race::NotSet);
                 c.edit_note(|note| {
-                    note.edit_content(|_| "james' character note!".to_owned());
+                    note.edit_content(|_| "james' character note!".into());
                 });
                 c
             },
             {
-                let mut c = Character::with_default_stats("nick");
+                let mut c = Character::with_default_stats("nick", Race::Human);
                 c.edit_note(|note| {
-                    note.edit_content(|_| "nick's character note!".to_owned());
+                    note.edit_content(|_| "nick's character note!".into());
                 });
                 c
             },
         ], vec![Note::with_empty_title("note #1 here!"), Note::with_empty_title("note #2 here!")]);
 
-        let notes = campaign.notes().collect::<Vec<_>>();
+        let notes = campaign.iter_notes().collect::<Vec<_>>();
         assert_eq!(notes.len(), 4);
 
         assert!(notes[0].character.is_none());

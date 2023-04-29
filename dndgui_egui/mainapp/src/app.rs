@@ -27,8 +27,8 @@ impl MainApp {
 
     fn setup_fonts(ctx: &Context) {
         let mut fontdefs = FontDefinitions::default();
-        fontdefs.font_data.insert("dnd".into(), FontData::from_static(include_bytes!("../../Dalelands.ttf")));
-        fontdefs.families.insert(FontFamily::Name("dnd".into()), vec!["dnd".into()]);
+        // fontdefs.font_data.insert("dnd".into(), FontData::from_static(include_bytes!("../../Dalelands.ttf")));
+        fontdefs.families.insert(FontFamily::Name("dnd".into()), vec!["Hack".into()]);
         ctx.set_fonts(fontdefs);
     }
 }
