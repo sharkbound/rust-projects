@@ -8,9 +8,9 @@ pub struct Character {
     pub name: String,
     pub stats: AttributeStats,
     pub note: Note,
-    pub character_id: Uuid,
     pub race: Race,
     pub level: u32,
+    pub id: Uuid,
 }
 
 impl Character {
@@ -19,7 +19,7 @@ impl Character {
             name: name.to_owned(),
             stats,
             note: Default::default(),
-            character_id: Uuid::new_v4(),
+            id: Uuid::new_v4(),
             race,
             level: level.unwrap_or(1),
         }
@@ -38,9 +38,9 @@ impl Character {
             name: name.to_owned(),
             stats: Default::default(),
             note: Default::default(),
-            character_id: Uuid::new_v4(),
+            id: Uuid::new_v4(),
             race,
-            level: 1
+            level: 1,
         }
     }
 
@@ -57,7 +57,7 @@ impl Default for Character {
             name: Default::default(),
             stats: Default::default(),
             note: Default::default(),
-            character_id: Uuid::new_v4(),
+            id: Uuid::new_v4(),
             level: 1,
         }
     }

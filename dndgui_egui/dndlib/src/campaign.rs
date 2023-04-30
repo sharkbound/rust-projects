@@ -1,24 +1,31 @@
 use std::slice::Iter;
-use crate::{Character, Note};
+use crate::{CampaignData, Character, Note};
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize)]
 pub struct DndCampaign {
     title: String,
     characters: Vec<Character>,
     global_notes: Vec<Note>,
+    data: CampaignData,
 }
 
 impl DndCampaign {
     pub fn new(title: &str, characters: Vec<Character>, notes: Vec<Note>) -> Self {
         Self {
             characters,
-            title: title.to_owned(),
+            title: title.into(),
             global_notes: notes,
+            data: Default::default(),
         }
     }
 
     pub fn title(&self) -> &str { &self.title }
+    pub fn data_mut(&mut self) -> &mut CampaignData { &mut self.data }
+    pub fn data(&self) -> &CampaignData { &self.data }
+    pub fn character_ids(&self) -> Vec<Uuid> { self.iter_characters().map(|c| c.id).collect() }
+
     pub fn iter_characters(&self) -> Iter<'_, Character> { self.characters.iter() }
     pub fn iter_notes(&self) -> CampaignNotesIter { CampaignNotesIter { global_note_index: 0, character_index: 0, campaign: self } }
 
@@ -32,6 +39,10 @@ impl DndCampaign {
 
     pub fn find_character(&self, search: impl FnMut(&&Character) -> bool) -> Option<&Character> {
         self.characters.iter().find(search)
+    }
+
+    pub fn find_character_by_id(&self, id: Uuid) -> Option<&Character> {
+        self.find_character(|c| c.id == id)
     }
 }
 

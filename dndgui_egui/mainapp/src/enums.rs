@@ -9,6 +9,7 @@ pub enum MainTab {
     Characters,
     Notes,
     Settings,
+    Locations,
 }
 
 impl Default for MainTab {

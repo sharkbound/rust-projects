@@ -82,6 +82,7 @@ impl App for MainApp {
                     ui.horizontal(|ui| {
                         ui.selectable_value(&mut self.current_maintab, MainTab::Overview, "Overview");
                         ui.selectable_value(&mut self.current_maintab, MainTab::Characters, "Characters");
+                        ui.selectable_value(&mut self.current_maintab, MainTab::Locations, "Locations");
                         ui.selectable_value(&mut self.current_maintab, MainTab::Notes, "Notes");
                         ui.selectable_value(&mut self.current_maintab, MainTab::Settings, "Settings");
                     });
@@ -93,6 +94,7 @@ impl App for MainApp {
                         MainTab::Characters => { ui.label("Characters"); }
                         MainTab::Notes => { ui.label("Notes"); }
                         MainTab::Settings => { ui.label("Settings"); }
+                        MainTab::Locations => { ui.label("Locations"); }
                     }
                 });
             });
