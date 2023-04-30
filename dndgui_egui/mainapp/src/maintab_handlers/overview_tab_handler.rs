@@ -21,7 +21,7 @@ pub(crate) fn render_maintab_overview(_ctx: &Context, ui: &mut Ui, app: &mut Mai
             format!("{} (Race: {}, Level: {})", &character.name, character.race.to_string(), character.level))
             .font(FontId::new(20.0, dnd_font_family()));
 
-        if ui.add(Label::new(character_summary).sense(Sense::click().union(Sense::hover()))).clicked() {
+        if ui.add(Label::new(character_summary).sense(Sense::click())).clicked() {
             app.current_maintab = MainTab::Characters;
         }
         // ui.label(RichText::new(character_summary).font(FontId::new(20.0, dnd_font_family())));
