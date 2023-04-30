@@ -1,6 +1,6 @@
-use std::borrow::Cow;
+use std::collections::HashMap;
 use eframe::{App, egui, Frame, run_native};
-use eframe::egui::{Context, FontData, FontDefinitions, FontFamily, SelectableLabel};
+use eframe::egui::{Context, FontDefinitions, FontFamily};
 use dndlib::{DndCampaign};
 use crate::enums::ModalAction;
 use crate::enums::MainTab;
@@ -12,6 +12,7 @@ pub struct MainApp {
     pub(crate) campaign: Option<DndCampaign>,
     pub(crate) modal: Option<Box<dyn Fn(&Context) -> ModalAction>>,
     pub(crate) current_maintab: MainTab,
+    pub(crate) checked_store: HashMap<String, bool>,
     initfonts: bool,
 }
 
@@ -41,6 +42,7 @@ impl Default for MainApp {
             modal: Default::default(),
             current_maintab: Default::default(),
             initfonts: true,
+            checked_store: HashMap::new(),
         }
     }
 }

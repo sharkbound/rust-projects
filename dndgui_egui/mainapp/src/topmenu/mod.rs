@@ -31,7 +31,7 @@ fn create_filler_campaign() -> DndCampaign {
                     20,
                     15,
                     16,
-                )).edit(|chr| {
+                ), Some(14)).edit(|chr| {
                     chr.edit_note(|note| {
                         note.edit_title(|_| "Default Dan's Note!".to_owned());
                         note.edit_content(|_| "Default Dan's Note Content! Not much to see here, cause Default Dan is a pretty generic guy!".to_owned());

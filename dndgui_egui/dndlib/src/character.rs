@@ -10,16 +10,18 @@ pub struct Character {
     pub note: Note,
     pub character_id: Uuid,
     pub race: Race,
+    pub level: u32,
 }
 
 impl Character {
-    pub fn new(name: &str, race: Race, stats: AttributeStats) -> Self {
+    pub fn new(name: &str, race: Race, stats: AttributeStats, level: Option<u32>) -> Self {
         Character {
             name: name.to_owned(),
             stats,
             note: Default::default(),
             character_id: Uuid::new_v4(),
             race,
+            level: level.unwrap_or(1),
         }
     }
 
@@ -38,6 +40,7 @@ impl Character {
             note: Default::default(),
             character_id: Uuid::new_v4(),
             race,
+            level: 1
         }
     }
 
@@ -49,6 +52,13 @@ impl Character {
 
 impl Default for Character {
     fn default() -> Self {
-        Character { race: Race::NotSet, name: Default::default(), stats: Default::default(), note: Default::default(), character_id: Uuid::new_v4() }
+        Character {
+            race: Race::NotSet,
+            name: Default::default(),
+            stats: Default::default(),
+            note: Default::default(),
+            character_id: Uuid::new_v4(),
+            level: 1,
+        }
     }
 }
