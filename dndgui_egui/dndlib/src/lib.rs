@@ -6,6 +6,7 @@ pub mod aliases;
 pub mod campaign_fs;
 pub mod race;
 pub mod data;
+pub mod iterators;
 
 pub use character::*;
 pub use attribute_stats::*;
@@ -15,3 +16,4 @@ pub use aliases::*;
 pub use campaign_fs::*;
 pub use race::*;
 pub use data::*;
+pub use iterators::*;

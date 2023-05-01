@@ -1,5 +1,5 @@
 use std::slice::Iter;
-use crate::{CampaignData, Character, Note};
+use crate::{CampaignData, Character, CharacterInfo, Note};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -25,6 +25,7 @@ impl DndCampaign {
     pub fn data_mut(&mut self) -> &mut CampaignData { &mut self.data }
     pub fn data(&self) -> &CampaignData { &self.data }
     pub fn character_ids(&self) -> Vec<Uuid> { self.iter_characters().map(|c| c.id).collect() }
+    pub fn all_character_infos(&self) -> Vec<CharacterInfo> { self.characters.iter().map(|c| c.as_info()).collect() }
 
     pub fn iter_characters(&self) -> Iter<'_, Character> { self.characters.iter() }
     pub fn iter_notes(&self) -> CampaignNotesIter { CampaignNotesIter { global_note_index: 0, character_index: 0, campaign: self } }
@@ -44,6 +45,14 @@ impl DndCampaign {
     pub fn find_character_by_id(&self, id: Uuid) -> Option<&Character> {
         self.find_character(|c| c.id == id)
     }
+
+    pub fn find_character_info(&self, search: impl FnMut(&&Character) -> bool) -> Option<CharacterInfo> {
+        self.find_character(search).map(|c| c.as_info())
+    }
+
+    pub fn find_character_info_by_id(&self, id: Uuid) -> Option<CharacterInfo> {
+        self.find_character_info(|c| c.id == id)
+    }
 }
 
 impl Default for DndCampaign {
@@ -55,7 +64,7 @@ impl Default for DndCampaign {
 #[derive(Debug)]
 pub struct NoteIterItem<'a> {
     note: &'a Note,
-    character: Option<&'a Character>,
+    character: Option<CharacterInfo>,
 }
 
 pub struct CampaignNotesIter<'a> {
@@ -82,7 +91,7 @@ impl<'a> Iterator for CampaignNotesIter<'a> {
                         self.character_index += 1;
                         Some(NoteIterItem {
                             note: &character.note,
-                            character: Some(&character),
+                            character: Some(character.as_info()),
                         })
                     }
                     None => None,

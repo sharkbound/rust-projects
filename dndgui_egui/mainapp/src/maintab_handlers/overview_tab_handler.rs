@@ -20,12 +20,7 @@ pub(crate) fn render_maintab_overview(_ctx: &Context, ui: &mut Ui, app: &mut Mai
     ui.add(RichTestBuilder::new("Characters").size(25f32).font_family(dnd_font_family()).build_label());
     ui.add_space(10.0);
 
-    for char_id in campaign.character_ids() {
-        let character = match campaign.find_character_by_id(char_id) {
-            None => continue,
-            Some(character) => { character }
-        };
-
+    for character in campaign.all_character_infos() {
         let character_summary_label = RichTestBuilder::new(
             &format!("{} (Race: {}, Level: {})", &character.name, character.race.to_string(), character.level))
             .font_family(dnd_font_family())
@@ -34,8 +29,7 @@ pub(crate) fn render_maintab_overview(_ctx: &Context, ui: &mut Ui, app: &mut Mai
 
         if ui.add(character_summary_label.sense(Sense::click())).clicked() {
             app.current_maintab = MainTab::Characters;
-            let character_id = character.id;
-            campaign.data_mut().add_open_character_window(character_id);
+            campaign.data_mut().add_open_character_window(character.id);
         }
     }
 }

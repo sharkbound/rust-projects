@@ -5,6 +5,7 @@ use dndlib::{DndCampaign};
 use crate::enums::ModalAction;
 use crate::enums::MainTab;
 use crate::{file_dialog_handler, modals, topmenu};
+use crate::maintab_handlers::characters_tab_handler::render_maintab_characters;
 use crate::maintab_handlers::overview_tab_handler::render_maintab_overview;
 
 pub struct MainApp {
@@ -91,7 +92,7 @@ impl App for MainApp {
                 egui::CentralPanel::default().show(ctx, |ui| {
                     match self.current_maintab {
                         MainTab::Overview => { render_maintab_overview(ctx, ui, self); }
-                        MainTab::Characters => { ui.label("Characters"); }
+                        MainTab::Characters => { render_maintab_characters(ctx, ui, self); }
                         MainTab::Notes => { ui.label("Notes"); }
                         MainTab::Settings => { ui.label("Settings"); }
                         MainTab::Locations => { ui.label("Locations"); }

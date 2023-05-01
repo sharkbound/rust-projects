@@ -44,6 +44,16 @@ impl Character {
         }
     }
 
+    pub fn as_info(&self) -> CharacterInfo {
+        CharacterInfo {
+            name: self.name.clone(),
+            stats: self.stats,
+            race: self.race.clone(),
+            level: self.level,
+            id: self.id,
+        }
+    }
+
     pub fn edit_note(&mut self, mut edit: impl FnMut(&mut Note)) -> &mut Self {
         edit(&mut self.note);
         self
@@ -61,4 +71,13 @@ impl Default for Character {
             level: 1,
         }
     }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct CharacterInfo {
+    pub name: String,
+    pub id: Uuid,
+    pub race: Race,
+    pub stats: AttributeStats,
+    pub level: u32,
 }
