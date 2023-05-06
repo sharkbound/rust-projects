@@ -3,7 +3,7 @@ use uuid::Uuid;
 
 #[derive(Serialize, Deserialize)]
 pub struct CampaignData {
-    pub open_character_windows: Vec<Uuid>,
+    open_character_windows: Vec<Uuid>,
 }
 
 impl CampaignData {
@@ -11,6 +11,10 @@ impl CampaignData {
         if !self.open_character_windows.contains(&character_id) {
             self.open_character_windows.push(character_id);
         }
+    }
+
+    pub fn open_character_windows(&self) -> &[Uuid] {
+        &self.open_character_windows
     }
 
     pub fn remove_open_character_window(&mut self, character_id: Uuid) {

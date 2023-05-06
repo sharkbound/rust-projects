@@ -15,21 +15,21 @@ pub(crate) fn render_maintab_overview(_ctx: &Context, ui: &mut Ui, app: &mut Mai
     let dnd_font_family = || FontFamily::Name("dnd".into());
 
     ui.add(RichTestBuilder::new(campaign.title()).size(30f32).font_family(dnd_font_family()).build_label());
-    ui.add_space(30.0);
-
-    ui.add(RichTestBuilder::new("Characters").size(25f32).font_family(dnd_font_family()).build_label());
-    ui.add_space(10.0);
-
-    for character in campaign.all_character_infos() {
-        let character_summary_label = RichTestBuilder::new(
-            &format!("{} (Race: {}, Level: {})", &character.name, character.race.to_string(), character.level))
-            .font_family(dnd_font_family())
-            .size(20f32)
-            .build_label();
-
-        if ui.add(character_summary_label.sense(Sense::click())).clicked() {
-            app.current_maintab = MainTab::Characters;
-            campaign.data_mut().add_open_character_window(character.id);
-        }
-    }
+    // ui.add_space(30.0);
+    //
+    // ui.add(RichTestBuilder::new("Characters").size(25f32).font_family(dnd_font_family()).build_label());
+    // ui.add_space(10.0);
+    //
+    // for character in campaign.all_character_infos() {
+    //     let character_summary_label = RichTestBuilder::new(
+    //         &format!("{} (Race: {}, Level: {})", &character.name, character.race.to_string(), character.level))
+    //         .font_family(dnd_font_family())
+    //         .size(20f32)
+    //         .build_label();
+    //
+    //     if ui.add(character_summary_label.sense(Sense::click())).clicked() {
+    //         app.current_maintab = MainTab::Characters;
+    //         campaign.data_mut().add_open_character_window(character.id);
+    //     }
+    // }
 }

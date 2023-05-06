@@ -36,6 +36,19 @@ fn create_filler_campaign() -> DndCampaign {
                         note.edit_title(|_| "Default Dan's Note!".to_owned());
                         note.edit_content(|_| "Default Dan's Note Content! Not much to see here, cause Default Dan is a pretty generic guy!".to_owned());
                     });
+                }),
+                Character::new("John Doe", Race::Human, AttributeStats::new(
+                    40,
+                    10,
+                    80,
+                    20,
+                    45,
+                    1337,
+                ), Some(14)).edit(|chr| {
+                    chr.edit_note(|note| {
+                        note.edit_title(|_| "John Doe's Note!".to_owned());
+                        note.edit_content(|_| "Generic note for John Doe!".to_owned());
+                    });
                 })
             ],
         vec![
