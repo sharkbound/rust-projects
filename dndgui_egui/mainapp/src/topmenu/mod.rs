@@ -1,6 +1,6 @@
 use eframe::egui;
 use eframe::egui::{Context, Ui};
-use dndlib::{AttributeStats, Character, DndCampaign, Note, Race};
+use dndlib::{AbilityScores, Character, DndCampaign, Note, Race};
 use crate::{file_dialog_handler, MainApp};
 
 pub(crate) fn show_top_menu(ctx: &Context, app: &mut MainApp) {
@@ -24,7 +24,7 @@ fn create_filler_campaign() -> DndCampaign {
     DndCampaign::new(
         "Example Campaign For Testing",
         vec![
-                Character::new("Default Dan", Race::BugBear, AttributeStats::new(
+                Character::new("Default Dan", Race::BugBear, AbilityScores::new(
                     16,
                     10,
                     8,
@@ -37,7 +37,7 @@ fn create_filler_campaign() -> DndCampaign {
                         note.edit_content(|_| "Default Dan's Note Content! Not much to see here, cause Default Dan is a pretty generic guy!".to_owned());
                     });
                 }),
-                Character::new("John Doe", Race::Human, AttributeStats::new(
+                Character::new("John Doe", Race::Human, AbilityScores::new(
                     40,
                     10,
                     80,

@@ -44,12 +44,13 @@ pub(crate) fn render_maintab_characters(_ctx: &Context, ui: &mut Ui, app: &mut M
                 campaign.data_mut().remove_open_character_window(id);
             }
 
-            ui.label(format!("STR {} ({})", character.stats.strength, character.stats.strength_mod()));
-            ui.label(format!("DEX {} ({})", character.stats.dexterity, character.stats.dexterity_mod()));
-            ui.label(format!("CON {} ({})", character.stats.constitution, character.stats.constitution_mod()));
-            ui.label(format!("INT {} ({})", character.stats.intelligence, character.stats.intelligence_mod()));
-            ui.label(format!("WIS {} ({})", character.stats.wisdom, character.stats.wisdom_mod()));
-            ui.label(format!("CHA {} ({})", character.stats.charisma, character.stats.charisma_mod()));
+            let modifiers = character.ability_scores.ability_score_modifiers();
+            ui.label(format!("STR {} ({})", character.ability_scores.strength, modifiers.strength));
+            ui.label(format!("DEX {} ({})", character.ability_scores.dexterity, modifiers.dexterity));
+            ui.label(format!("CON {} ({})", character.ability_scores.constitution, modifiers.constitution));
+            ui.label(format!("INT {} ({})", character.ability_scores.intelligence, modifiers.intelligence));
+            ui.label(format!("WIS {} ({})", character.ability_scores.wisdom, modifiers.wisdom));
+            ui.label(format!("CHA {} ({})", character.ability_scores.charisma, modifiers.charisma));
         });
     }
 }
