@@ -1,5 +1,5 @@
 use eframe::egui;
-use eframe::egui::{Color32, FontFamily, FontId, RichText};
+use eframe::egui::{Color32, Context, FontDefinitions, FontFamily, FontId, RichText};
 
 pub struct RichTestBuilder {
     pub text: String,
@@ -53,4 +53,11 @@ impl Default for RichTestBuilder {
             color: None,
         }
     }
+}
+
+pub fn setup_fonts(ctx: &Context) {
+    let mut fontdefs = FontDefinitions::default();
+    // fontdefs.font_data.insert("dnd".into(), FontData::from_static(include_bytes!("../../Dalelands.ttf")));
+    fontdefs.families.insert(FontFamily::Name("dnd".into()), vec!["Hack".into()]);
+    ctx.set_fonts(fontdefs);
 }

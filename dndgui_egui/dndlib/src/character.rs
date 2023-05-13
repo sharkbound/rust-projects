@@ -54,7 +54,7 @@ impl Character {
             race: self.race.clone(),
             level: self.level,
             id: self.id,
-            skill_modifiers: self.ability_scores.skill_modifiers(),
+            skill_modifiers: self.ability_scores.skill_modifiers(self.extra_stats.proficiency_bonus),
             extra_stats: self.extra_stats,
         }
     }

@@ -1,11 +1,9 @@
 use eframe::egui;
-use eframe::egui::{Context, FontFamily, FontId, Label, RichText, Sense, TopBottomPanel, Ui};
-use eframe::egui::accesskit::Role::Caption;
-use eframe::egui::panel::TopBottomSide;
-use crate::{MainApp, MainTab};
+use eframe::egui::{Context, RichText, Sense, TopBottomPanel, Ui};
+use crate::{MainApp};
 use crate::helpers::RichTestBuilder;
 
-pub(crate) fn render_maintab_characters(_ctx: &Context, ui: &mut Ui, app: &mut MainApp) {
+pub(crate) fn render_maintab_characters(parent_ctx: &Context, ui: &mut Ui, app: &mut MainApp) {
     let campaign = match app.campaign {
         Some(ref mut campaign) => campaign,
         None => {
@@ -14,7 +12,7 @@ pub(crate) fn render_maintab_characters(_ctx: &Context, ui: &mut Ui, app: &mut M
         }
     };
 
-    egui::Window::new("Character List").show(_ctx, |ui| {
+    egui::Window::new("Character List").resizable(true).show(parent_ctx, |ui| {
         let character_infos = campaign.all_character_infos();
         if character_infos.is_empty() {
             ui.label("There are no characters to show here!");
@@ -39,8 +37,9 @@ pub(crate) fn render_maintab_characters(_ctx: &Context, ui: &mut Ui, app: &mut M
             None => continue,
         };
 
-        egui::Window::new(&character.name).resizable(true).show(_ctx, |ui| {
-            if ui.button("Close").clicked() {
+        let window = egui::Window::new(&character.name).resizable(true);
+        window.show(parent_ctx, |ui| {
+            if ui.button("Close Character Info").clicked() {
                 campaign.data_mut().remove_open_character_window(id);
             }
 
