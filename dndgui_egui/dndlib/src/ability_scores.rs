@@ -28,7 +28,7 @@ impl AbilityScores {
     }
 
     pub fn skill_modifiers(&self, proficiency_bonus: u32) -> SkillModifiers {
-        SkillModifiers::from(*self, proficiency_bonus) //TODO: use extra data on character
+        SkillModifiers::from_ability_scores(*self, None, None) //TODO: replace Nones with actual values
     }
 }
 

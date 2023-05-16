@@ -44,16 +44,6 @@ impl Default for MainApp {
 
 impl App for MainApp {
     fn update(&mut self, ctx: &Context, frame: &mut Frame) {
-        // //the following is testing code
-        // egui::Window::new("TopBottomPanel Testing").show(ctx, |ui| {
-        //     TopBottomPanel::top("Top Panel").show(ctx, |ui| {
-        //         if ui.button("Close").clicked() {
-        //             //...
-        //         }
-        //     });
-        // });
-        // return;
-
         if self.initfonts {
             crate::helpers::setup_fonts(ctx);
             self.initfonts = false;

@@ -1,5 +1,5 @@
 use eframe::egui;
-use eframe::egui::{Context, RichText, Sense, TopBottomPanel, Ui};
+use eframe::egui::{CentralPanel, Context, RichText, Sense, TopBottomPanel, Ui};
 use crate::{MainApp};
 use crate::helpers::RichTestBuilder;
 
@@ -39,9 +39,11 @@ pub(crate) fn render_maintab_characters(parent_ctx: &Context, ui: &mut Ui, app: 
 
         let window = egui::Window::new(&character.name).resizable(true);
         window.show(parent_ctx, |ui| {
-            if ui.button("Close Character Info").clicked() {
-                campaign.data_mut().remove_open_character_window(id);
-            }
+            TopBottomPanel::top(format!("character_{}_menu_bar", character.id)).show_inside(ui, |ui| {
+                if ui.button("Close").clicked() {
+                    campaign.data_mut().remove_open_character_window(id);
+                }
+            });
 
             let modifiers = character.ability_scores.ability_score_modifiers();
             ui.label(format!("STR {} ({})", character.ability_scores.strength, modifiers.strength));
