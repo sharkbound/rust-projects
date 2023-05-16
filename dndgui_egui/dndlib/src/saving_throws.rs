@@ -11,7 +11,7 @@ pub struct SavingThrowsModifiers {
 }
 
 impl SavingThrowsModifiers {
-    pub fn from_ability_scores(ability_score_modifiers: AbilityScoreModifiers, bonuses: Option<SavingThrowBonuses>, proficiencies: Option<SavingThrowProficiencies>) -> Self {
+    pub fn from_ability_score_modifiers(ability_score_modifiers: AbilityScoreModifiers, bonuses: Option<SavingThrowBonuses>, proficiencies: Option<SavingThrowProficiencies>) -> Self {
         let proficiencies = proficiencies.unwrap_or_default();
         let bonuses = bonuses.unwrap_or_default();
         let calc_bonus = |modifier: i32, proficiency_status: ProficiencyStatus| {
@@ -54,7 +54,7 @@ pub struct SavingThrowProficiencies {
 
 #[cfg(test)]
 mod saving_throws_modifiers_tests {
-    use crate::HelperExt;
+    use crate::{AbilityScores, HelperExt};
     use super::*;
 
     #[test]
@@ -79,7 +79,7 @@ mod saving_throws_modifiers_tests {
         });
 
 
-        let bonuses = SavingThrowsModifiers::from_ability_scores(ability_score_modifiers, Some(bonuses), Some(proficiencies));
+        let bonuses = SavingThrowsModifiers::from_ability_score_modifiers(ability_score_modifiers, Some(bonuses), Some(proficiencies));
         assert_eq!(bonuses.strength, 3);
     }
 }

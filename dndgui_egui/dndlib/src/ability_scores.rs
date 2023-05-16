@@ -32,7 +32,7 @@ impl AbilityScores {
     }
 
     pub fn saving_throw_modifiers(&self, proficiency_bonus: Option<SavingThrowBonuses>, proficiencies: Option<SavingThrowProficiencies>) -> SavingThrowsModifiers {
-        SavingThrowsModifiers::from_ability_scores(self.ability_score_modifiers(), proficiency_bonus, proficiencies)
+        SavingThrowsModifiers::from_ability_score_modifiers(self.ability_score_modifiers(), proficiency_bonus, proficiencies)
     }
 }
 
@@ -63,12 +63,12 @@ impl AbilityScoreModifiers {
 impl Default for AbilityScores {
     fn default() -> Self {
         AbilityScores {
-            strength: 0,
-            dexterity: 0,
-            constitution: 0,
-            intelligence: 0,
-            wisdom: 0,
-            charisma: 0,
+            strength: 10,
+            dexterity: 10,
+            constitution: 10,
+            intelligence: 10,
+            wisdom: 10,
+            charisma: 10,
         }
     }
 }
