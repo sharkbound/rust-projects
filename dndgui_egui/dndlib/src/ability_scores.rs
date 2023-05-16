@@ -28,7 +28,7 @@ impl AbilityScores {
     }
 
     pub fn skill_modifiers(&self, bonuses: Option<SkillBonuses>, proficiencies: Option<SkillProficiencies>) -> SkillModifiers {
-        SkillModifiers::from_ability_scores(self.ability_score_modifiers(), bonuses, proficiencies)
+        SkillModifiers::from_ability_score_modifiers(self.ability_score_modifiers(), bonuses, proficiencies)
     }
 
     pub fn saving_throw_modifiers(&self, proficiency_bonus: Option<SavingThrowBonuses>, proficiencies: Option<SavingThrowProficiencies>) -> SavingThrowsModifiers {

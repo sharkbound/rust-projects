@@ -105,7 +105,7 @@ pub struct SkillModifiers {
 }
 
 impl SkillModifiers {
-    pub fn from_ability_scores(ability_score_modifiers: AbilityScoreModifiers, bonuses: Option<SkillBonuses>, proficiencies: Option<SkillProficiencies>) -> Self {
+    pub fn from_ability_score_modifiers(ability_score_modifiers: AbilityScoreModifiers, bonuses: Option<SkillBonuses>, proficiencies: Option<SkillProficiencies>) -> Self {
         let proficiencies = proficiencies.unwrap_or_default();
         let bonuses = bonuses.unwrap_or_default();
         let proficiency_bonus = bonuses.proficiency_bonus;
@@ -239,12 +239,12 @@ pub struct SkillProficiencies {
 
 #[cfg(test)]
 mod test_skill_modifiers {
-    use crate::HelperExt;
+    use crate::{AbilityScores, HelperExt};
     use super::*;
 
     #[test]
     fn test_skill_bonuses() {
-        let skills = SkillModifiers::from_ability_scores(
+        let skills = SkillModifiers::from_ability_score_modifiers(
             AbilityScores {
                 dexterity: 12,
                 wisdom: 0,
@@ -252,7 +252,7 @@ mod test_skill_modifiers {
                 strength: 0,
                 charisma: 0,
                 constitution: 0,
-            },
+            }.ability_score_modifiers(),
             Some(SkillBonuses::default().apply_own(|mut it| {
                 it.proficiency_bonus = 2;
                 it.acrobatics = 2;
@@ -265,7 +265,7 @@ mod test_skill_modifiers {
         );
         assert_eq!(skills.acrobatics.score, 7);
 
-        let skills = SkillModifiers::from_ability_scores(
+        let skills = SkillModifiers::from_ability_score_modifiers(
             AbilityScores {
                 dexterity: 14,
                 wisdom: 0,
@@ -273,7 +273,7 @@ mod test_skill_modifiers {
                 strength: 0,
                 charisma: 0,
                 constitution: 0,
-            },
+            }.ability_score_modifiers(),
             Some(SkillBonuses::default().apply_own(|mut it| {
                 it.proficiency_bonus = 2;
                 it
