@@ -1,9 +1,9 @@
-use std::task::Context;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 #[derive(Serialize, Deserialize)]
 pub struct CampaignData {
+    #[serde(skip)]
     open_character_windows: Vec<Uuid>,
 }
 

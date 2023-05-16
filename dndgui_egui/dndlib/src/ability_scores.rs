@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::SkillModifiers;
+use crate::{SavingThrowBonuses, SavingThrowProficiencies, SavingThrowsModifiers, SkillBonuses, SkillModifiers, SkillProficiencies};
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct AbilityScores {
@@ -24,15 +24,19 @@ impl AbilityScores {
     }
 
     pub fn ability_score_modifiers(&self) -> AbilityScoreModifiers {
-        AbilityScoreModifiers::from(*self)
+        AbilityScoreModifiers::from_ability_scores(*self)
     }
 
-    pub fn skill_modifiers(&self, proficiency_bonus: u32) -> SkillModifiers {
-        SkillModifiers::from_ability_scores(*self, None, None) //TODO: replace Nones with actual values
+    pub fn skill_modifiers(&self, bonuses: Option<SkillBonuses>, proficiencies: Option<SkillProficiencies>) -> SkillModifiers {
+        SkillModifiers::from_ability_scores(self.ability_score_modifiers(), bonuses, proficiencies)
+    }
+
+    pub fn saving_throw_modifiers(&self, proficiency_bonus: Option<SavingThrowBonuses>, proficiencies: Option<SavingThrowProficiencies>) -> SavingThrowsModifiers {
+        SavingThrowsModifiers::from_ability_scores(self.ability_score_modifiers(), proficiency_bonus, proficiencies)
     }
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct AbilityScoreModifiers {
     pub strength: i32,
     pub dexterity: i32,
@@ -43,7 +47,7 @@ pub struct AbilityScoreModifiers {
 }
 
 impl AbilityScoreModifiers {
-    fn from(ability_scores: AbilityScores) -> Self {
+    pub fn from_ability_scores(ability_scores: AbilityScores) -> Self {
         let modifier = |value| (value as i32 - 10) / 2;
         Self {
             strength: modifier(ability_scores.strength),

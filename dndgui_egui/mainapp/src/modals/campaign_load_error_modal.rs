@@ -17,10 +17,10 @@ pub(crate) fn create_campaign_load_error_modal(e: CampaignLoadError) -> Option<B
                     ui.label(format!(r#"An error occurred while loading the campaign json file located at: "{:?}""#, e.path()));
                     ui.separator();
                     match &e {
-                        CampaignLoadError::FileNotFound(file) => { ui.label("the selected file could not be found"); }
-                        CampaignLoadError::ReadFile(file) => { ui.label("An error occurred when trying to read the file"); }
-                        CampaignLoadError::FileOpen(file) => { ui.label("An error occurred when trying to open the file"); }
-                        CampaignLoadError::Json(file, error) => {
+                        CampaignLoadError::FileNotFound(_) => { ui.label("the selected file could not be found"); }
+                        CampaignLoadError::ReadFile(_) => { ui.label("An error occurred when trying to read the file"); }
+                        CampaignLoadError::FileOpen(_) => { ui.label("An error occurred when trying to open the file"); }
+                        CampaignLoadError::Json(_, error) => {
                             match error.classify() {
                                 Category::Io => { ui.label(format!("An IO error occurred when trying to read the file")); }
                                 Category::Syntax => {

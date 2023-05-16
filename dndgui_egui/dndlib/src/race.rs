@@ -48,6 +48,7 @@ impl ToString for Race {
 }
 
 impl Race {
+    #[allow(dead_code)]
     fn is_custom(&self) -> bool {
         matches!(self, Race::Custom(_))
     }

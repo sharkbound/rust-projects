@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use eframe::{App, egui, Frame, run_native};
-use eframe::egui::{Context, FontFamily, TopBottomPanel};
+use eframe::egui::{Context};
 use dndlib::{DndCampaign};
 use crate::enums::ModalAction;
 use crate::enums::MainTab;
@@ -43,7 +43,7 @@ impl Default for MainApp {
 
 
 impl App for MainApp {
-    fn update(&mut self, ctx: &Context, frame: &mut Frame) {
+    fn update(&mut self, ctx: &Context, _frame: &mut Frame) {
         if self.initfonts {
             crate::helpers::setup_fonts(ctx);
             self.initfonts = false;

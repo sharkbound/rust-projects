@@ -1,4 +1,4 @@
-use crate::{AbilityScores, DndCampaign, ExtraStats, Note, Race, SkillModifiers};
+use crate::{AbilityScores, ExtraStats, HelperExt, Note, Race, SkillBonuses, SkillModifiers, SkillProficiencies};
 
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -54,7 +54,13 @@ impl Character {
             race: self.race.clone(),
             level: self.level,
             id: self.id,
-            skill_modifiers: self.ability_scores.skill_modifiers(self.extra_stats.proficiency_bonus),
+            skill_modifiers: self.ability_scores.skill_modifiers(
+                Some(SkillBonuses::default().apply_own(|mut it| {
+                    it.proficiency_bonus = self.extra_stats.proficiency_bonus;
+                    it
+                })),
+                Some(SkillProficiencies::default()),
+            ),
             extra_stats: self.extra_stats,
         }
     }

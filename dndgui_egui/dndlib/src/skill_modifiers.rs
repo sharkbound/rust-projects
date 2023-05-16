@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::AbilityScores;
+use crate::{AbilityScoreModifiers};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub enum ProficiencyStatus {
@@ -105,86 +105,85 @@ pub struct SkillModifiers {
 }
 
 impl SkillModifiers {
-    fn calc_bonus(ability_score: u32, bonus: i32, proficiency_bonus: u32, proficiency: ProficiencyStatus) -> i32 {
-        ability_score as i32 + bonus + (proficiency_bonus as i32 * proficiency.proficiency_multiplier())
-    }
-
-    pub fn from_ability_scores(ability_scores: AbilityScores, bonuses: Option<SkillBonuses>, proficiencies: Option<SkillProficiencies>) -> Self {
+    pub fn from_ability_scores(ability_score_modifiers: AbilityScoreModifiers, bonuses: Option<SkillBonuses>, proficiencies: Option<SkillProficiencies>) -> Self {
         let proficiencies = proficiencies.unwrap_or_default();
         let bonuses = bonuses.unwrap_or_default();
         let proficiency_bonus = bonuses.proficiency_bonus;
+        let calc_bonus = |ability_score_modifier: i32, bonus: i32, proficiency: ProficiencyStatus| {
+            ability_score_modifier + bonus + (proficiency_bonus as i32 * proficiency.proficiency_multiplier())
+        };
 
         Self {
             acrobatics: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.dexterity, bonuses.acrobatics, proficiency_bonus, proficiencies.acrobatics),
+                calc_bonus(ability_score_modifiers.dexterity, bonuses.acrobatics, proficiencies.acrobatics),
                 proficiencies.acrobatics,
             ),
             animal_handling: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.wisdom, bonuses.animal_handling, proficiency_bonus, proficiencies.animal_handling),
+                calc_bonus(ability_score_modifiers.wisdom, bonuses.animal_handling, proficiencies.animal_handling),
                 proficiencies.animal_handling,
             ),
             arcana: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.intelligence, bonuses.arcana, proficiency_bonus, proficiencies.arcana),
+                calc_bonus(ability_score_modifiers.intelligence, bonuses.arcana, proficiencies.arcana),
                 proficiencies.arcana,
             ),
             athletics: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.strength, bonuses.athletics, proficiency_bonus, proficiencies.athletics),
+                calc_bonus(ability_score_modifiers.strength, bonuses.athletics, proficiencies.athletics),
                 proficiencies.athletics,
             ),
             deception: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.charisma, bonuses.deception, proficiency_bonus, proficiencies.deception),
+                calc_bonus(ability_score_modifiers.charisma, bonuses.deception, proficiencies.deception),
                 proficiencies.deception,
             ),
             history: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.intelligence, bonuses.history, proficiency_bonus, proficiencies.history),
+                calc_bonus(ability_score_modifiers.intelligence, bonuses.history, proficiencies.history),
                 proficiencies.history,
             ),
             insight: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.wisdom, bonuses.insight, proficiency_bonus, proficiencies.insight),
+                calc_bonus(ability_score_modifiers.wisdom, bonuses.insight, proficiencies.insight),
                 proficiencies.insight,
             ),
             intimidation: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.charisma, bonuses.intimidation, proficiency_bonus, proficiencies.intimidation),
+                calc_bonus(ability_score_modifiers.charisma, bonuses.intimidation, proficiencies.intimidation),
                 proficiencies.intimidation,
             ),
             investigation: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.intelligence, bonuses.investigation, proficiency_bonus, proficiencies.investigation),
+                calc_bonus(ability_score_modifiers.intelligence, bonuses.investigation, proficiencies.investigation),
                 proficiencies.investigation,
             ),
             medicine: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.wisdom, bonuses.medicine, proficiency_bonus, proficiencies.medicine),
+                calc_bonus(ability_score_modifiers.wisdom, bonuses.medicine, proficiencies.medicine),
                 proficiencies.medicine,
             ),
             nature: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.intelligence, bonuses.nature, proficiency_bonus, proficiencies.nature),
+                calc_bonus(ability_score_modifiers.intelligence, bonuses.nature, proficiencies.nature),
                 proficiencies.nature,
             ),
             perception: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.wisdom, bonuses.perception, proficiency_bonus, proficiencies.perception),
+                calc_bonus(ability_score_modifiers.wisdom, bonuses.perception, proficiencies.perception),
                 proficiencies.perception,
             ),
             performance: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.charisma, bonuses.performance, proficiency_bonus, proficiencies.performance),
+                calc_bonus(ability_score_modifiers.charisma, bonuses.performance, proficiencies.performance),
                 proficiencies.performance,
             ),
             persuasion: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.charisma, bonuses.persuasion, proficiency_bonus, proficiencies.persuasion),
+                calc_bonus(ability_score_modifiers.charisma, bonuses.persuasion, proficiencies.persuasion),
                 proficiencies.persuasion,
             ),
             religion: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.intelligence, bonuses.religion, proficiency_bonus, proficiencies.religion),
+                calc_bonus(ability_score_modifiers.intelligence, bonuses.religion, proficiencies.religion),
                 proficiencies.religion,
             ),
             slight_of_hand: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.dexterity, bonuses.slight_of_hand, proficiency_bonus, proficiencies.slight_of_hand),
+                calc_bonus(ability_score_modifiers.dexterity, bonuses.slight_of_hand, proficiencies.slight_of_hand),
                 proficiencies.slight_of_hand,
             ),
             stealth: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.dexterity, bonuses.stealth, proficiency_bonus, proficiencies.stealth),
+                calc_bonus(ability_score_modifiers.dexterity, bonuses.stealth, proficiencies.stealth),
                 proficiencies.stealth,
             ),
             survival: SkillModifierStat::new(
-                Self::calc_bonus(ability_scores.wisdom, bonuses.survival, proficiency_bonus, proficiencies.survival),
+                calc_bonus(ability_score_modifiers.wisdom, bonuses.survival, proficiencies.survival),
                 proficiencies.survival,
             ),
         }
@@ -235,4 +234,55 @@ pub struct SkillProficiencies {
     pub slight_of_hand: ProficiencyStatus,
     pub stealth: ProficiencyStatus,
     pub survival: ProficiencyStatus,
+}
+
+
+#[cfg(test)]
+mod test_skill_modifiers {
+    use crate::HelperExt;
+    use super::*;
+
+    #[test]
+    fn test_skill_bonuses() {
+        let skills = SkillModifiers::from_ability_scores(
+            AbilityScores {
+                dexterity: 12,
+                wisdom: 0,
+                intelligence: 0,
+                strength: 0,
+                charisma: 0,
+                constitution: 0,
+            },
+            Some(SkillBonuses::default().apply_own(|mut it| {
+                it.proficiency_bonus = 2;
+                it.acrobatics = 2;
+                it
+            })),
+            Some(SkillProficiencies::default().apply_own(|mut it| {
+                it.acrobatics = ProficiencyStatus::Expertise;
+                it
+            })),
+        );
+        assert_eq!(skills.acrobatics.score, 7);
+
+        let skills = SkillModifiers::from_ability_scores(
+            AbilityScores {
+                dexterity: 14,
+                wisdom: 0,
+                intelligence: 0,
+                strength: 0,
+                charisma: 0,
+                constitution: 0,
+            },
+            Some(SkillBonuses::default().apply_own(|mut it| {
+                it.proficiency_bonus = 2;
+                it
+            })),
+            Some(SkillProficiencies::default().apply_own(|mut it| {
+                it.acrobatics = ProficiencyStatus::Full;
+                it
+            })),
+        );
+        assert_eq!(skills.acrobatics.score, 4);
+    }
 }

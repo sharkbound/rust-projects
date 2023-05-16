@@ -1,5 +1,5 @@
 use eframe::egui;
-use eframe::egui::{Context, Ui};
+use eframe::egui::{Context};
 use dndlib::{AbilityScores, Character, DndCampaign, Note, Race};
 use crate::{file_dialog_handler, MainApp};
 

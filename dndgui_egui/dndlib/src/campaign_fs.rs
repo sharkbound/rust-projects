@@ -42,7 +42,7 @@ pub fn load_campaign(path: &Path) -> Result<DndCampaign, CampaignLoadError> {
 
     let mut file = match File::open(&path) {
         Ok(file) => file,
-        Err(e) => return Err(CampaignLoadError::FileOpen(path.to_path_buf())),
+        Err(_e) => return Err(CampaignLoadError::FileOpen(path.to_path_buf())),
     };
 
     let mut file_contents = String::new();

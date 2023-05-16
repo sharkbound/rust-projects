@@ -1,5 +1,5 @@
 use eframe::egui;
-use eframe::egui::{CentralPanel, Context, RichText, Sense, TopBottomPanel, Ui};
+use eframe::egui::{Context, Sense, TopBottomPanel, Ui};
 use crate::{MainApp};
 use crate::helpers::RichTestBuilder;
 
