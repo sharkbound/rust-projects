@@ -1,4 +1,4 @@
-use crate::{AbilityScores, ExtraStats, HelperExt, Note, Race, SkillBonuses, SkillModifiers, SkillProficiencies};
+use crate::{AbilityScores, ExtraStats, HelperExt, Note, Race, SavingThrowBonuses, SavingThrowProficiencies, SavingThrowsModifiers, SkillBonuses, SkillModifiers, SkillProficiencies};
 
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -12,6 +12,7 @@ pub struct Character {
     pub level: u32,
     pub id: Uuid,
     pub extra_stats: ExtraStats,
+    // TODO: stores bonus stats here? maybe?
 }
 
 impl Character {
@@ -62,6 +63,13 @@ impl Character {
                 Some(SkillProficiencies::default()),
             ),
             extra_stats: self.extra_stats,
+            saving_throws: self.ability_scores.saving_throw_modifiers(
+                Some(SavingThrowBonuses::default().apply_own(|mut it| {
+                    it.proficiency_bonus = self.extra_stats.proficiency_bonus;
+                    it
+                })),
+                Some(SavingThrowProficiencies::default()),
+            ),
         }
     }
 
@@ -94,4 +102,6 @@ pub struct CharacterInfo {
     pub level: u32,
     pub extra_stats: ExtraStats,
     pub skill_modifiers: SkillModifiers,
+    pub saving_throws: SavingThrowsModifiers,
+    // TODO: stores bonus stats here? maybe?
 }

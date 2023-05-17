@@ -32,7 +32,7 @@ impl RichTestBuilder {
         self
     }
 
-    pub fn build_rich_text(self) -> RichText {
+    pub fn into_rich_text(self) -> RichText {
         let richtext = RichText::new(&self.text).font(self.font_id);
         match self.color {
             Some(color) => richtext.color(color),
@@ -40,8 +40,8 @@ impl RichTestBuilder {
         }
     }
 
-    pub fn build_label(self) -> egui::Label {
-        egui::Label::new(self.build_rich_text())
+    pub fn into_label(self) -> egui::Label {
+        egui::Label::new(self.into_rich_text())
     }
 }
 

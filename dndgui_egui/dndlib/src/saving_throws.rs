@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use crate::{AbilityScoreModifiers, ProficiencyStatus};
 
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct SavingThrowsModifiers {
     pub strength: i32,
     pub dexterity: i32,

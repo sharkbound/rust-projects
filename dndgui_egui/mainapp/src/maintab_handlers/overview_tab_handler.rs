@@ -14,7 +14,7 @@ pub(crate) fn render_maintab_overview(_ctx: &Context, ui: &mut Ui, app: &mut Mai
 
     let dnd_font_family = || FontFamily::Name("dnd".into());
 
-    ui.add(RichTestBuilder::new(campaign.title()).size(30f32).font_family(dnd_font_family()).build_label());
+    ui.add(RichTestBuilder::new(campaign.title()).size(30f32).font_family(dnd_font_family()).into_label());
     // ui.add_space(30.0);
     //
     // ui.add(RichTestBuilder::new("Characters").size(25f32).font_family(dnd_font_family()).build_label());
