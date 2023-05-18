@@ -1,7 +1,7 @@
 use eframe::egui;
 use eframe::egui::{Context, FontFamily, FontId, Label, RichText, Sense, Ui};
 use crate::{MainApp, MainTab};
-use crate::helpers::RichTestBuilder;
+use crate::helpers::{dnd_font_family, RichTestBuilder};
 
 pub(crate) fn render_maintab_overview(_ctx: &Context, ui: &mut Ui, app: &mut MainApp) {
     let campaign = match app.campaign {
@@ -12,7 +12,6 @@ pub(crate) fn render_maintab_overview(_ctx: &Context, ui: &mut Ui, app: &mut Mai
         }
     };
 
-    let dnd_font_family = || FontFamily::Name("dnd".into());
 
     ui.add(RichTestBuilder::new(campaign.title()).size(30f32).font_family(dnd_font_family()).into_label());
     // ui.add_space(30.0);

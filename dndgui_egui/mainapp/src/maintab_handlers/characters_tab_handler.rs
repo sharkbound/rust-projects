@@ -1,63 +1,56 @@
 use eframe::egui;
-use eframe::egui::{Context, Sense, TopBottomPanel, Ui};
+use eframe::egui::{Context, Direction, Grid, Layout, Sense, TopBottomPanel, Ui};
+use uuid::Uuid;
 use dndlib::AbilityScores;
 use crate::{MainApp};
-use crate::helpers::RichTestBuilder;
+use crate::helpers::{dnd_font_family, RichTestBuilder};
 
-fn populate_ability_scores_collapsable(ui: &mut Ui, ability_scores: AbilityScores) {
-    let ability_score_modifiers = ability_scores.ability_score_modifiers();
+fn number_sign(val: i32) -> &'static str {
+    if val >= 0 { "+" } else { "-" }
+}
 
-    // first row of ability scores: STR, DEX, CON
-    ui.collapsing(RichTestBuilder::new("Ability Scores").size(17.0).into_rich_text(), |ui| {
-        let number_sign_str = |val: i32| if val >= 0 { "+" } else { "-" };
-        ui.horizontal(|ui| {
-            let fontsize = 14.0;
-            let strength_mod = ability_score_modifiers.strength;
-            ui.add(RichTestBuilder::new(
-                &format!("STR {}\n{}{}", ability_scores.strength, number_sign_str(strength_mod), strength_mod)).size(fontsize).into_label()
+// todo: grouping and centering stats and modifiers
+fn add_stat_with_layout(ui: &mut Ui, name: &str, value: u32, modifier: i32, fontsize: f32) {
+    ui.vertical(|ui| {
+        ui.with_layout(Layout::top_down(egui::Align::Center), |ui| {
+            ui.add(
+                RichTestBuilder::new(&format!("{}({})", name, value))
+                    .size(fontsize)
+                    .font_family(dnd_font_family())
+                    .color(match value {
+                        ..=9 => egui::Color32::RED,
+                        10 => egui::Color32::WHITE,
+                        11.. => egui::Color32::GREEN,
+                    })
+                    .into_label()
             );
-
-            ui.separator();
-
-            let dexterity_mod = ability_score_modifiers.dexterity;
-            ui.add(RichTestBuilder::new(
-                &format!("DEX {}\n{}{}", ability_scores.dexterity, number_sign_str(dexterity_mod), dexterity_mod)).size(fontsize).into_label()
-            );
-
-            ui.separator();
-
-            let constitution_mod = ability_score_modifiers.constitution;
-            ui.add(RichTestBuilder::new(
-                &format!("CON {}\n{}{}", ability_scores.constitution, number_sign_str(constitution_mod), constitution_mod)).size(fontsize).into_label()
-            );
-            ui.separator();
+            ui.add(
+                RichTestBuilder::new(&format!("{}{}", number_sign(modifier), modifier.abs()))
+                    .size(fontsize)
+                    .font_family(dnd_font_family())
+                    .color(match modifier {
+                        ..=-1 => egui::Color32::RED,
+                        0 => egui::Color32::WHITE,
+                        1.. => egui::Color32::GREEN,
+                    })
+                    .into_label()
+            )
         });
+    });
+}
 
-        ui.separator();
-
-        // second row of ability scores: INT, WIS, CHA
-        ui.horizontal(|ui| {
+fn populate_ability_scores_collapsable(ui: &mut Ui, ability_scores: AbilityScores, character_id: Uuid) {
+    let modifiers = ability_scores.ability_score_modifiers();
+    ui.collapsing(RichTestBuilder::new("Ability Scores").size(17.0).into_rich_text(), |ui| {
+        Grid::new(format!("ability_scores_{}", character_id)).spacing((0.0, 20.0)).min_col_width(80.0).show(ui, |ui| {
             let fontsize = 14.0;
-            let intelligence_mod = ability_score_modifiers.intelligence;
-            ui.add(RichTestBuilder::new(
-                &format!("INT {}\n{}{}", ability_scores.intelligence, number_sign_str(intelligence_mod), intelligence_mod)).size(fontsize).into_label()
-            );
-
-            ui.separator();
-
-            let wisdom_mod = ability_score_modifiers.wisdom;
-            ui.add(RichTestBuilder::new(
-                &format!("WIS {}\n{}{}", ability_scores.wisdom, number_sign_str(wisdom_mod), wisdom_mod)).size(fontsize).into_label()
-            );
-
-            ui.separator();
-
-            let charisma_mod = ability_score_modifiers.charisma;
-            ui.add(RichTestBuilder::new(
-                &format!("CHA {}\n{}{}", ability_scores.charisma, number_sign_str(charisma_mod), charisma_mod)).size(fontsize).into_label()
-            );
-
-            ui.separator();
+            add_stat_with_layout(ui, "STR", ability_scores.strength, modifiers.strength, fontsize);
+            add_stat_with_layout(ui, "DEX", ability_scores.dexterity, modifiers.dexterity, fontsize);
+            add_stat_with_layout(ui, "CON", ability_scores.constitution, modifiers.constitution, fontsize);
+            ui.end_row();
+            add_stat_with_layout(ui, "INT", ability_scores.intelligence, modifiers.intelligence, fontsize);
+            add_stat_with_layout(ui, "WIS", ability_scores.wisdom, modifiers.wisdom, fontsize);
+            add_stat_with_layout(ui, "CHA", ability_scores.charisma, modifiers.charisma, fontsize);
         });
     });
 }
@@ -109,7 +102,7 @@ pub(crate) fn render_maintab_characters(parent_ctx: &Context, ui: &mut Ui, app: 
             let saving_throws = character.saving_throws;
 
             ui.vertical(|ui| {
-                populate_ability_scores_collapsable(ui, ability_scores);
+                populate_ability_scores_collapsable(ui, ability_scores, character.id);
             });
 
             // let modifiers = character.ability_scores.ability_score_modifiers();

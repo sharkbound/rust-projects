@@ -45,6 +45,10 @@ impl RichTestBuilder {
     }
 }
 
+pub fn dnd_font_family() -> FontFamily {
+    FontFamily::Name("dnd".into())
+}
+
 impl Default for RichTestBuilder {
     fn default() -> Self {
         RichTestBuilder {
