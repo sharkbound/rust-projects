@@ -31,7 +31,7 @@ pub fn create_user(connection: &mut SqliteConnection, username: &str, user_type:
                     }
                     Some(res.remove(0))
                 }
-                Err(_) => return None,
+                Err(_) => None,
             }
         }
     }
