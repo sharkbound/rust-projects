@@ -1,4 +1,3 @@
-use std::slice::Iter;
 use crate::{CampaignData, Character, CharacterInfo, Note};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -27,7 +26,7 @@ impl DndCampaign {
     pub fn character_ids(&self) -> Vec<Uuid> { self.iter_characters().map(|c| c.id).collect() }
     pub fn all_character_infos(&self) -> Vec<CharacterInfo> { self.characters.iter().map(|c| c.as_info()).collect() }
 
-    pub fn iter_characters(&self) -> Iter<'_, Character> { self.characters.iter() }
+    pub fn iter_characters(&self) -> impl Iterator<Item=&Character> { self.characters.iter() }
     pub fn iter_notes(&self) -> CampaignNotesIter { CampaignNotesIter { global_note_index: 0, character_index: 0, campaign: self } }
 
     pub fn add_character(&mut self, character: Character) {
