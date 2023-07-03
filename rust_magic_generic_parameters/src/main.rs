@@ -80,7 +80,7 @@ impl<F, T> Handler<T> for F
         F: Fn(T),
         T: FromData, {
     fn handle(&self, data: Data) {
-        (self)(FromData::from_data(&data));
+        (self)(T::from_data(&data));
     }
 }
 
@@ -91,6 +91,6 @@ impl<F, T1, T2> Handler<(T1, T2)> for F
         T2: FromData,
 {
     fn handle(&self, data: Data) {
-        (self)(FromData::from_data(&data), FromData::from_data(&data));
+        (self)(T1::from_data(&data), T2::from_data(&data));
     }
 }
