@@ -106,6 +106,12 @@ impl Application for App {
         let row_radios = row![radio1, radio2, radio3].spacing(10);
         let row_theme_radios = row![theme_light_radio, theme_dark_radio].spacing(10);
 
+        let left_right_split = row![
+            button("Left"),
+            horizontal_space(Length::Fill),
+            button("Right"),
+        ];
+
         let content = container(column![
             row1,
             vertical_space(10),
@@ -114,7 +120,9 @@ impl Application for App {
             row_radios,
             vertical_space(10),
             row_theme_radios,
-        ].align_items(Alignment::Center));//.spacing(10);
+            vertical_space(10),
+            left_right_split,
+        ].align_items(Alignment::Center));
 
         container(content)
             .center_x()
