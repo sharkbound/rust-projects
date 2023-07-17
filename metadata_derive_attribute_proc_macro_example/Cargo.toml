@@ -1,0 +1,6 @@
+[workspace]
+members = [
+	"metadata_derive",
+	"main",
+	"metadata",
+]
