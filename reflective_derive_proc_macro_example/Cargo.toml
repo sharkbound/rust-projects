@@ -1,5 +1,5 @@
 [package]
-name = "reflective_proc_macro_example"
+name = "reflective_derive_proc_macro_example"
 version = "0.1.0"
 edition = "2021"
 

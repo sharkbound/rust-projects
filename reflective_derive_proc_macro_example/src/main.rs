@@ -1,4 +1,4 @@
-use reflective_proc_macro_example::Reflective;
+use reflective_derive_proc_macro_example::Reflective;
 
 fn main() {
     let mut counter = Counter::new("counter");
