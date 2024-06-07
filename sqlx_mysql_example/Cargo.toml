@@ -1,0 +1,8 @@
+[package]
+name = "sqlx_mysql_example"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sqlx = { version = "0.7.4", features = ["sqlx-mysql", "mysql", "runtime-async-std"] }
+async-std = { version = "1.12.0", features = ["std", "attributes"] }
