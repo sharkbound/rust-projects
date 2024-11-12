@@ -12,7 +12,7 @@ impl Instructions {
 
     pub fn read_opcode(&self, index: usize) -> Option<OPCode> {
         let opcode_code = self.raw_instructions.get(index).cloned()?;
-        let opcode_len = opcode_param_count(opcode_code);
+        let opcode_len = opcode_param_len(opcode_code);
         let params = &self.raw_instructions[index + 1..=index + opcode_len as usize];
         let get_param = |i| params.get(i).cloned().map(|x| x as usize);
 
