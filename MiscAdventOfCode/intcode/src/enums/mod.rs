@@ -1,3 +1,3 @@
-pub mod instruction;
+pub mod opcode;
 
-pub use instruction::Instruction;
+pub use opcode::OPCode;

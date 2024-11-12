@@ -1,5 +1,9 @@
+pub const OPCODE_ADD_CODE: u32 = 1;
+pub const OPCODE_SUB_CODE: u32 = 2;
+pub const OPCODE_STOP_CODE: u32 = 99;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Instruction {
+pub enum OPCode {
     ADD {
         addr_add_1: usize,
         addr_add_2: usize,
@@ -12,9 +16,9 @@ pub enum Instruction {
     },
     STOP,
 }
-impl Instruction {
+impl OPCode {
     pub fn add(addr_add_1: u32, addr_add_2: u32, addr_result: u32) -> Self {
-        Instruction::ADD {
+        OPCode::ADD {
             addr_add_1: addr_add_1 as usize,
             addr_add_2: addr_add_2 as usize,
             addr_result: addr_result as usize,
@@ -22,7 +26,7 @@ impl Instruction {
     }
 
     pub fn sub(addr_sub_1: u32, addr_sub_2: u32, addr_result: u32) -> Self {
-        Instruction::SUB {
+        OPCode::SUB {
             addr_sub_1: addr_sub_1 as usize,
             addr_sub_2: addr_sub_2 as usize,
             addr_result: addr_result as usize,
@@ -30,14 +34,27 @@ impl Instruction {
     }
 
     pub fn stop() -> Self {
-        Instruction::STOP
+        OPCode::STOP
     }
 
     pub fn code(&self) -> u32 {
         match self {
-            Instruction::ADD { .. } => 1,
-            Instruction::SUB { .. } => 2,
-            Instruction::STOP => 99,
+            OPCode::ADD { .. } => 1,
+            OPCode::SUB { .. } => 2,
+            OPCode::STOP => 99,
         }
+    }
+
+    pub fn opcode_len(&self) -> u32 {
+        opcode_param_len(self.code())
+    }
+}
+
+pub fn opcode_param_len(code: u32) -> u32 {
+    match code {
+        1 => 3,
+        2 => 3,
+        99 => 0,
+        _ => panic!("Invalid opcode: {}", code),
     }
 }
