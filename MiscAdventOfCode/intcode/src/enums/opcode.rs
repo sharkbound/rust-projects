@@ -1,24 +1,24 @@
-pub const OPCODE_ADD_CODE: u32 = 1;
-pub const OPCODE_SUB_CODE: u32 = 2;
-pub const OPCODE_STOP_CODE: u32 = 99;
+pub const OPCODE_ADD_CODE: i64 = 1;
+pub const OPCODE_SUB_CODE: i64 = 2;
+pub const OPCODE_STOP_CODE: i64 = 99;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum OPCode {
-    ADD {
+    Add {
         addr_add_1: usize,
         addr_add_2: usize,
         addr_result: usize,
     },
-    SUB {
+    Sub {
         addr_sub_1: usize,
         addr_sub_2: usize,
         addr_result: usize,
     },
-    STOP,
+    Stop,
 }
 impl OPCode {
     pub fn add(addr_add_1: u32, addr_add_2: u32, addr_result: u32) -> Self {
-        OPCode::ADD {
+        OPCode::Add {
             addr_add_1: addr_add_1 as usize,
             addr_add_2: addr_add_2 as usize,
             addr_result: addr_result as usize,
@@ -26,7 +26,7 @@ impl OPCode {
     }
 
     pub fn sub(addr_sub_1: u32, addr_sub_2: u32, addr_result: u32) -> Self {
-        OPCode::SUB {
+        OPCode::Sub {
             addr_sub_1: addr_sub_1 as usize,
             addr_sub_2: addr_sub_2 as usize,
             addr_result: addr_result as usize,
@@ -34,14 +34,14 @@ impl OPCode {
     }
 
     pub fn stop() -> Self {
-        OPCode::STOP
+        OPCode::Stop
     }
 
-    pub fn code(&self) -> u32 {
+    pub fn code(&self) -> i64 {
         match self {
-            OPCode::ADD { .. } => 1,
-            OPCode::SUB { .. } => 2,
-            OPCode::STOP => 99,
+            OPCode::Add { .. } => 1,
+            OPCode::Sub { .. } => 2,
+            OPCode::Stop => 99,
         }
     }
 
@@ -50,7 +50,7 @@ impl OPCode {
     }
 }
 
-pub fn opcode_param_len(code: u32) -> u32 {
+pub fn opcode_param_len(code: i64) -> u32 {
     match code {
         1 => 3,
         2 => 3,
