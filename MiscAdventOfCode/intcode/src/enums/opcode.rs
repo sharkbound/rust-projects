@@ -9,7 +9,7 @@ pub enum OPCode {
         addr_add_2: usize,
         addr_result: usize,
     },
-    Sub {
+    Mul {
         addr_sub_1: usize,
         addr_sub_2: usize,
         addr_result: usize,
@@ -26,7 +26,7 @@ impl OPCode {
     }
 
     pub fn sub(addr_sub_1: u32, addr_sub_2: u32, addr_result: u32) -> Self {
-        OPCode::Sub {
+        OPCode::Mul {
             addr_sub_1: addr_sub_1 as usize,
             addr_sub_2: addr_sub_2 as usize,
             addr_result: addr_result as usize,
@@ -40,7 +40,7 @@ impl OPCode {
     pub fn code(&self) -> i64 {
         match self {
             OPCode::Add { .. } => 1,
-            OPCode::Sub { .. } => 2,
+            OPCode::Mul { .. } => 2,
             OPCode::Stop => 99,
         }
     }

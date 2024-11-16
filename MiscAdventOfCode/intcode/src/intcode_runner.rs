@@ -41,7 +41,7 @@ impl IntCodeRunner {
         if index < self.instructions.len() {
             self.instructions.read(index)
         } else {
-            self.memory.get_direct(index - ())
+            self.memory.get_direct(self.offset_ptr(index))
         }
     }
 
@@ -59,32 +59,32 @@ impl IntCodeRunner {
                 addr_add_2,
                 addr_result,
             } => {
-                let val_add_1 = self.memory.get_direct(addr_add_1).expect(&format!(
+                let val_add_1 = self.read(addr_add_1).expect(&format!(
                     "Could not read value for ADD on IntCodeRunner#{} for arg 1",
                     self.id
                 ));
-                let val_add_2 = self.memory.get_direct(addr_add_2).expect(&format!(
+                let val_add_2 = self.read(addr_add_2).expect(&format!(
                     "Could not read value for ADD on IntCodeRunner#{} for arg 2",
                     self.id
                 ));
-                self.memory.set(addr_result, val_add_1 + val_add_2);
+                self.write(addr_result, val_add_1 + val_add_2);
                 self.pc += opcode.opcode_len() as usize + 1;
             }
 
-            OPCode::Sub {
+            OPCode::Mul {
                 addr_sub_1,
                 addr_sub_2,
                 addr_result,
             } => {
-                let val_sub_1 = self.memory.get_direct(addr_sub_1).expect(&format!(
-                    "Could not read value for SUB on IntCodeRunner#{} for arg 1",
+                let val_sub_1 = self.read(addr_sub_1).expect(&format!(
+                    "Could not read value for MUL on IntCodeRunner#{} for arg 1",
                     self.id
                 ));
-                let val_sub_2 = self.memory.get_direct(addr_sub_2).expect(&format!(
-                    "Could not read value for SUB on IntCodeRunner#{} for arg 2",
+                let val_sub_2 = self.read(addr_sub_2).expect(&format!(
+                    "Could not read value for MUL on IntCodeRunner#{} for arg 2",
                     self.id
                 ));
-                self.memory.set(addr_result, val_sub_1 - val_sub_2);
+                self.write(addr_result, val_sub_1 * val_sub_2);
                 self.pc += opcode.opcode_len() as usize + 1;
             }
 

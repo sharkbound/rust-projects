@@ -3,7 +3,7 @@ use crate::{opcode, OPCode};
 
 #[derive(Clone)]
 pub struct Instructions {
-    raw_instructions: Vec<i64>,
+    pub raw_instructions: Vec<i64>,
 }
 
 impl Instructions {
@@ -23,7 +23,7 @@ impl Instructions {
                 addr_add_2: get_param(1)?,
                 addr_result: get_param(2)?,
             },
-            opcode::OPCODE_SUB_CODE => OPCode::Sub {
+            opcode::OPCODE_SUB_CODE => OPCode::Mul {
                 addr_sub_1: get_param(0)?,
                 addr_sub_2: get_param(1)?,
                 addr_result: get_param(2)?,
@@ -46,5 +46,9 @@ impl Instructions {
 
     pub fn len(&self) -> usize {
         self.raw_instructions.len()
+    }
+
+    pub fn slice_view(&self) -> &[i64] {
+        &self.raw_instructions
     }
 }
