@@ -2,7 +2,7 @@ pub mod utils;
 
 use crate::KeyAction::Quit;
 use crate::utils::create_click_region_registry;
-use crossterm::event::{Event, KeyCode};
+use crossterm::event::{Event, KeyCode, MouseButton, MouseEvent, MouseEventKind};
 use crossterm::{execute, terminal::enable_raw_mode};
 use ratatui::{
     DefaultTerminal, Frame,
@@ -42,10 +42,10 @@ impl TuiApp {
     pub fn new() -> Self {
         Self {
             tab_titles: vec![
-                String::from("Characters"),
-                String::from("Items"),
-                String::from("Combat"),
-                String::from("Logs"),
+                String::from("Characters (F1)"),
+                String::from("Items (F2)"),
+                String::from("Combat (F3)"),
+                String::from("Logs (F4)"),
             ],
             current_tab_index: 0,
             click_interaction_registry: create_click_region_registry(),
@@ -63,22 +63,34 @@ impl TuiApp {
         loop {
             terminal.draw(|t| self.render(t))?;
             let event = crossterm::event::read()?;
-            if let Event::Key(key) = event {
-                if key.is_press() {
-                    match self.handle_key_press(key) {
-                        KeyAction::Quit => return Ok(()),
-                        KeyAction::None => {}
-                    }
-                } else {
-                    match self.handle_key_release(key) {
-                        KeyAction::Quit => return Ok(()),
-                        KeyAction::None => {}
+            match event {
+                Event::Key(key) => {
+                    if key.is_press() {
+                        match self.handle_key_press(key) {
+                            KeyAction::Quit => return Ok(()),
+                            KeyAction::None => {}
+                        }
+                    } else {
+                        match self.handle_key_release(key) {
+                            KeyAction::Quit => return Ok(()),
+                            KeyAction::None => {}
+                        }
                     }
                 }
+                Event::Mouse(e) if matches!(e.kind, MouseEventKind::Down(MouseButton::Left)) => {
+                    self.handle_mouse_click(e);
+                }
+                _ => {}
             }
-            // dbg!(&event);
         }
     }
+
+    fn handle_mouse_click(&mut self, event: MouseEvent) {
+        if let Some(tab_index) = self.click_interaction_registry.handle_click(event.column, event.row) {
+            self.current_tab_index = *tab_index;
+        }
+    }
+
 
     fn handle_key_press(&mut self, key: crossterm::event::KeyEvent) -> KeyAction {
         match key.code {
@@ -98,7 +110,7 @@ impl TuiApp {
 
     fn render(&mut self, frame: &mut Frame) {
         let vertical = Layout::vertical([Constraint::Length(3), Constraint::Min(0)]);
-        let [tabs_rect, content_rect] = vertical.areas(frame.area());
+        let [tabs_area, content_area] = vertical.areas(frame.area());
         let tabs = Tabs::new(
             self.tab_titles
                 .iter()
@@ -109,12 +121,23 @@ impl TuiApp {
         .highlight_style(Style::new().fg(Color::Yellow))
         .block(Block::default().borders(Borders::ALL));
 
-        frame.render_widget(tabs, tabs_rect);
+        // Update click regions
+        self.click_interaction_registry.clear();
+        let mut x = tabs_area.x + 1; // offset for border
+        for (i, title) in self.tab_titles.iter().enumerate() {
+            let width = title.len() as u16 + 2;
+            let rect = Rect::new(x, tabs_area.y + 1, width, 1);
+            self.click_interaction_registry.register(rect, i);
+            x += width + 1;
+        }
+
+        frame.render_widget(tabs, tabs_area);
 
         frame.render_widget(
-            Paragraph::new("Hello, world!").centered()
+            Paragraph::new("Hello, world!")
+                .centered()
                 .block(Block::bordered()),
-            content_rect,
+            content_area,
         );
     }
 }
