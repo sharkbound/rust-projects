@@ -101,6 +101,6 @@ if not exist "%BIN_PATH%" (
 
 echo.
 echo Starting: %BIN_NAME%
-start "Running: %BIN_NAME%" cmd /k "%BIN_PATH%"
+start "Running: %BIN_NAME%" cmd /c "%BIN_PATH%"
 
 endlocal

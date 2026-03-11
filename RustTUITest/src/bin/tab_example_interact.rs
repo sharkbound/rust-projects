@@ -1,15 +1,15 @@
 use std::io;
 
+use RustTUITest::utils;
 use ratatui::{
+    DefaultTerminal, Frame,
     crossterm::event::{self, Event, KeyCode, MouseEventKind},
     layout::{Constraint, Layout, Rect},
     style::{Color, Style, Stylize},
     text::Line,
     widgets::{Block, Tabs},
-    DefaultTerminal, Frame,
 };
 use ratatui_interact::traits::ClickRegionRegistry;
-use RustTUITest::utils;
 
 struct App {
     selected_tab: usize,
@@ -35,21 +35,19 @@ impl App {
                     Event::Key(key) => match key.code {
                         KeyCode::Char('q') => return Ok(()),
                         KeyCode::Left => {
-                            self.selected_tab =
-                                self.selected_tab.saturating_sub(1);
+                            self.selected_tab = self.selected_tab.saturating_sub(1);
                         }
                         KeyCode::Right => {
-                            self.selected_tab = (self.selected_tab + 1)
-                                .min(self.tab_titles.len() - 1);
+                            self.selected_tab =
+                                (self.selected_tab + 1).min(self.tab_titles.len() - 1);
                         }
                         _ => {}
                     },
                     Event::Mouse(mouse) => {
                         if let MouseEventKind::Down(_) = mouse.kind {
                             // Use registry to check if click hit a tab
-                            if let Some(clicked_tab) = self
-                                .click_registry
-                                .handle_click(mouse.column, mouse.row)
+                            if let Some(clicked_tab) =
+                                self.click_registry.handle_click(mouse.column, mouse.row)
                             {
                                 self.selected_tab = *clicked_tab;
                             }
@@ -62,10 +60,7 @@ impl App {
     }
 
     fn draw(&mut self, frame: &mut Frame) {
-        let vertical = Layout::vertical([
-            Constraint::Length(3),
-            Constraint::Min(0),
-        ]);
+        let vertical = Layout::vertical([Constraint::Length(3), Constraint::Min(0)]);
         let [tabs_area, content_area] = vertical.areas(frame.area());
 
         // Clear previous click regions
@@ -87,9 +82,9 @@ impl App {
                 .map(|&t| Line::from(t))
                 .collect::<Vec<_>>(),
         )
-            .select(self.selected_tab)
-            .highlight_style(Style::new().fg(Color::Yellow).bold())
-            .block(Block::bordered().title("Clickable Tabs"));
+        .select(self.selected_tab)
+        .highlight_style(Style::new().fg(Color::Yellow).bold())
+        .block(Block::bordered().title("Clickable Tabs"));
 
         frame.render_widget(tabs, tabs_area);
 
@@ -98,27 +93,19 @@ impl App {
             "Tab: {} ({})\nMouse: enabled | Keys: ←/→/q",
             self.selected_tab, self.tab_titles[self.selected_tab]
         );
-        frame.render_widget(
-            Block::bordered(),
-            content_area,
-        );
+        frame.render_widget(Block::bordered(), content_area);
     }
 }
 
 fn main() -> io::Result<()> {
-    ratatui::crossterm::execute!(
-        io::stdout(),
-        ratatui::crossterm::event::EnableMouseCapture
-    )?;
+    ratatui::crossterm::execute!(io::stdout(), ratatui::crossterm::event::EnableMouseCapture)?;
 
     let mut terminal = ratatui::init();
     let result = App::new().run(&mut terminal);
     ratatui::restore();
 
-    let _ = ratatui::crossterm::execute!(
-        io::stdout(),
-        ratatui::crossterm::event::DisableMouseCapture
-    );
+    let _ =
+        ratatui::crossterm::execute!(io::stdout(), ratatui::crossterm::event::DisableMouseCapture);
 
     result
 }
